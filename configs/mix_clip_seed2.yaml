@@ -1,0 +1,4 @@
+# Seed 2 of mix_clip (init, data order and augmentation change).
+base: mix_clip.yaml
+run_name: mix_clip_seed2
+seed: 2

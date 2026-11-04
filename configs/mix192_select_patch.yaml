@@ -1,0 +1,11 @@
+# The 11 pillar11 channels mixed into 1 channel by a per-patch softmax: a 1x1x1 network picks the weights of every
+# 6^3 patch from its HU density (router features, context 9 patches), so each region can take its own window.
+base: mix192_base.yaml
+run_name: mix192_select_patch
+windowing:
+  arm: window_select
+  select_out: 1
+  select_per_patch: true
+  route_context: 9
+  window_lr: 2.5e-2
+  gate_lr: 2.5e-3

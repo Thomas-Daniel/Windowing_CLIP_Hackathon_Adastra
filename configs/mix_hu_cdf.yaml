@@ -1,0 +1,6 @@
+# Global histogram equalisation: HU -> CDF of the mix's body voxels (windowing.hu_hist), one fixed monotone curve
+# without clipping, repeated on the K = 11 stem channels like mix_clip. Does contrast allocation alone match the windows?
+base: mix_base.yaml
+run_name: mix_hu_cdf
+windowing:
+  arm: cdf

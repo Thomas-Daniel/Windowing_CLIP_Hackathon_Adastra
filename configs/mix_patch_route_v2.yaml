@@ -1,0 +1,15 @@
+# patch_route v2. mix_patch_route underfit from the start: its soft mixtures (top weight 0.65) made every channel a
+# blend of windows, and one window collapsed to 7 HU. Changes:
+# - hard top-1 routing with a straight-through gradient (each channel uses exactly one window per patch);
+# - widths >= 50 HU;
+# - windows 0-7 warm-started from mix_patch_bank's final global windows (channel k starts on window k), windows
+#   8-15 on a uniform grid of [-1000, 1000] (centres -875 ... +875, width 500) to give lung / bone options.
+# Only these 16 numbers come from the other run; the backbone starts from scratch as in every mix run.
+base: mix_patch_route.yaml
+run_name: mix_patch_route_v2
+windowing:
+  route_hard: true
+  width_min_hu: 50
+  route_init_windows:
+    centers: [-938, -800, -318, -147, -50, 33, 113, 243]
+    widths: [99, 928, 1975, 479, 78, 61, 174, 656]

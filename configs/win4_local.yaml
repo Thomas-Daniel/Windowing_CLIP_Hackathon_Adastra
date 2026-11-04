@@ -1,0 +1,6 @@
+# Arm 4: learned curves x per-patch gate from the patch's HU histogram (LocalWindow). Patches =
+# Atlas token grid (6^3 voxels). Gate = 1 at init, so it starts exactly as win3_learned.
+base: base.yaml
+run_name: win4_local
+windowing:
+  arm: local

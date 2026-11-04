@@ -1,0 +1,9 @@
+# Mix, per-patch windows (as win8_patch_bank): K = 8 sigmoid windows whose centre / width are shifted per
+# 6^3 patch by a 1x1x1 network fed with the patch's HU density; global windows from the mix's HU histogram.
+base: mix_base.yaml
+run_name: mix_patch_bank
+windowing:
+  arm: patch_bank
+  k: 8
+  window_lr: 2.5e-2
+  gate_lr: 2.5e-3

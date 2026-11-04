@@ -1,0 +1,6 @@
+# Hybrid: the 11 fixed pillar11 channels (best with clip on CT-RATE) + the 8 learned per-patch windows (best on
+# Merlin / INSPECT), 19 input channels.
+base: mix_patch_bank.yaml
+run_name: mix_hybrid_pillar_patch
+windowing:
+  fixed_windows: true

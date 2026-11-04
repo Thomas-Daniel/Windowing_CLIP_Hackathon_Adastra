@@ -1,0 +1,5 @@
+# Long run, the fixed 11 rad-vision-engine windows of Pillar-0 / Jolia, as mix_pillar11.
+base: long_base.yaml
+run_name: long_pillar11
+windowing:
+  arm: pillar11

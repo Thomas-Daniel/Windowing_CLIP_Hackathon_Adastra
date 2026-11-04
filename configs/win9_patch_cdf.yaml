@@ -1,0 +1,12 @@
+# Approach B: K = 8 free monotone transfer curves per patch (80 bins of 25 HU): bin logits = global
+# (histogram-equalisation init at 8 sharpness levels, from linear ramp to sharp) + per-patch network
+# on the HU density + learned weight x log(patch density) (local equalisation, starts at 0).
+base: base.yaml
+run_name: win9_patch_cdf
+windowing:
+  arm: patch_cdf
+  k: 8
+  local_eq: true
+  local_eq_init: 0.0
+  window_lr: 2.5e-2
+  gate_lr: 2.5e-3

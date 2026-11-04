@@ -1,0 +1,13 @@
+# Arm 3c: learned curves + per-channel learned HU shift and width factor (LearnedWindow(warp=True)),
+# all window parameters at 100x the base LR (2.5e-2).
+# Why: win3_learned (base LR) moved its logits by ~0.05 over the run; win3b (LR x100, cancelled at
+# step ~150) moved them by ~0.35 but its windows stayed in place (10-90% bounds within a few HU):
+# outside-window bins start at mass ~1e-5 (logit -11), so moving an edge by one 25-HU bin takes ~+8
+# in logit with a ~1000x weaker softmax gradient. The shift / width parameters move the window
+# directly, with gradient from every voxel on the curve's slope.
+base: base.yaml
+run_name: win3c_learned_warp
+windowing:
+  arm: learned
+  warp: true
+  window_lr: 2.5e-2

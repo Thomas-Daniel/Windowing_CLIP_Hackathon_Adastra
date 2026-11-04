@@ -1,0 +1,4 @@
+# Seed 2 of mix_patch_bank_uniform (init, data order and augmentation change).
+base: mix_patch_bank_uniform.yaml
+run_name: mix_patch_bank_uniform_seed2
+seed: 2

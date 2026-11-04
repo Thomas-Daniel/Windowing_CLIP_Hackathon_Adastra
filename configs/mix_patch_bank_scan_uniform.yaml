@@ -1,0 +1,5 @@
+# Per-scan context with uniform init (mix_patch_bank_scan x mix_patch_bank_uniform).
+base: mix_patch_bank_scan.yaml
+run_name: mix_patch_bank_scan_uniform
+windowing:
+  window_init: uniform

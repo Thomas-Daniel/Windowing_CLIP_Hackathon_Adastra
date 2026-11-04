@@ -1,0 +1,10 @@
+# Approach C: learned local histogram equalisation. Curves = CDF of softmax(global logits + lambda_k x
+# log(patch density)); no per-patch network. lambda_k = 1 is the patch's own histogram equalisation.
+# The most direct use of the upstream HU density; 8 x 80 + 8 parameters.
+base: base.yaml
+run_name: win10_patch_eq
+windowing:
+  arm: patch_eq
+  k: 8
+  local_eq_init: 0.5
+  window_lr: 2.5e-2

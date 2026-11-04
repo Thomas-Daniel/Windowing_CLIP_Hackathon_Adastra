@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+logs/
+runs/
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.bin
+*.npz
+*.npy
+checkpoints/
+optimizer*
+logs
+runs

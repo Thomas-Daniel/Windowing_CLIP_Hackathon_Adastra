@@ -1,0 +1,6 @@
+# Arm 3: 11 learned global transfer curves (LearnedWindow), initialised on the 10 Pillar-0 windows
+# + the full [-1000, 1000] ramp, 80 bins of 25 HU.
+base: base.yaml
+run_name: win3_learned
+windowing:
+  arm: learned

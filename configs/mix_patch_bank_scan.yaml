@@ -1,0 +1,6 @@
+# Context test: mix_patch_bank + a per-scan shift of every window from the volume's HU histogram and soft-tissue
+# noise level (chest vs abdomen, contrast, reconstruction kernel), added to the per-patch shifts.
+base: mix_patch_bank.yaml
+run_name: mix_patch_bank_scan
+windowing:
+  scan_context: true

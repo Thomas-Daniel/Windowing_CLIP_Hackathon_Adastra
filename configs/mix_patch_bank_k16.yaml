@@ -1,0 +1,6 @@
+# mix_patch_bank with 16 learned windows instead of 8 (the 8-window banks put 4-5 windows on soft tissue and none
+# above about +550 HU).
+base: mix_patch_bank.yaml
+run_name: mix_patch_bank_k16
+windowing:
+  k: 16

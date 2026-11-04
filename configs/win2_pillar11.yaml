@@ -1,0 +1,5 @@
+# Arm 2 (Pillar-0 style): 10 fixed rad-vision-engine windows + per-volume min-max (FixedWindows).
+base: base.yaml
+run_name: win2_pillar11
+windowing:
+  arm: pillar11

@@ -1,0 +1,8 @@
+# Control for A: the same 8 learned windows (same data-driven init) shared by every patch, no
+# per-patch network. Isolates the per-patch adaptation.
+base: base.yaml
+run_name: win11_global_bank
+windowing:
+  arm: global_bank
+  k: 8
+  window_lr: 2.5e-2

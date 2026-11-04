@@ -1,0 +1,6 @@
+# Control (not launched): local with patch histograms permuted across patches
+# (same parameters, no local information). With micro-batch 1 the permutation is within a volume.
+base: base.yaml
+run_name: win7_local_shuf
+windowing:
+  arm: local_shuf

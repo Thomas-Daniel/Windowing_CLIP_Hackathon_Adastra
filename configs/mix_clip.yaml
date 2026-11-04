@@ -1,0 +1,6 @@
+# Mix, reference without windowing (as win1_clip): HU ramp [-1000, 1000] -> [0, 1], repeated on the K = 11 stem
+# channels (ClipChannels), then the same PostNorm.
+base: mix_base.yaml
+run_name: mix_clip
+windowing:
+  arm: clip

@@ -1,0 +1,5 @@
+# Second seed of win8_patch_bank (init, data order and augmentation change), to measure run-to-run
+# variance against the win8 - win11 difference.
+base: win8_patch_bank.yaml
+run_name: win8_patch_bank_seed1
+seed: 1

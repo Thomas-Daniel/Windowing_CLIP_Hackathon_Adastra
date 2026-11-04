@@ -1,0 +1,6 @@
+# Hybrid with uniform init: the 11 fixed pillar11 channels + the 8 learned per-patch windows initialised evenly
+# over [-1000, 1000] (mix_hybrid_pillar_patch x mix_patch_bank_uniform), 19 input channels.
+base: mix_hybrid_pillar_patch.yaml
+run_name: mix_hybrid_uniform
+windowing:
+  window_init: uniform

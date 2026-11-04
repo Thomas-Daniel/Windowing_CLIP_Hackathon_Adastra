@@ -1,0 +1,9 @@
+# Control for A: per-patch network fed with densities permuted across patches (same parameters, no
+# local information). If A > this control, the gain comes from local density, not extra capacity.
+base: base.yaml
+run_name: win12_patch_bank_shuf
+windowing:
+  arm: patch_bank_shuf
+  k: 8
+  window_lr: 2.5e-2
+  gate_lr: 2.5e-3

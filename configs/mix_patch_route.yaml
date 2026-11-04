@@ -1,0 +1,14 @@
+# New approach: per-patch window routing (PatchWindowRouter). 16 learned windows shared by all patches; each of
+# the 8 output channels is a per-patch softmax mixture of them, chosen from the patch HU density at a 3^3 and a
+# 9^3-patch scale. + the fixed [-1000, 1000] ramp channel.
+base: mix_base.yaml
+run_name: mix_patch_route
+windowing:
+  arm: patch_route
+  k: 8
+  n_windows: 16
+  route_context: 9
+  route_init_logit: 3.0
+  passthrough: true
+  window_lr: 2.5e-2
+  gate_lr: 2.5e-3

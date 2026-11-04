@@ -1,0 +1,5 @@
+# Optional reference: the fixed 11 rad-vision-engine windows of Pillar-0 / Jolia (as win2_pillar11), no learning.
+base: mix_base.yaml
+run_name: mix_pillar11
+windowing:
+  arm: pillar11

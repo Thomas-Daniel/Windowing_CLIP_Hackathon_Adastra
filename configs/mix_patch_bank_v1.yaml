@@ -1,0 +1,5 @@
+# V1: mix_patch_bank + the fixed [-1000, 1000] ramp as a 9th channel.
+base: mix_patch_bank.yaml
+run_name: mix_patch_bank_v1
+windowing:
+  passthrough: true

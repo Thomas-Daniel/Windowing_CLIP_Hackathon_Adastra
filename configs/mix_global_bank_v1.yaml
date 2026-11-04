@@ -1,0 +1,5 @@
+# V1: mix_global_bank + the fixed [-1000, 1000] ramp as a 9th channel (no information lost outside the windows).
+base: mix_global_bank.yaml
+run_name: mix_global_bank_v1
+windowing:
+  passthrough: true

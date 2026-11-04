@@ -1,0 +1,10 @@
+# Arm 4c: local (curves x per-patch gate) with the learned per-channel HU shift / width factor.
+# Curves + shift / width at 100x the base LR (2.5e-2); gate network at 40x (1e-2): in win4b (gate at
+# 10x) the gate std was only 0.006 at step 140 and no gate deviated by more than 0.1.
+base: base.yaml
+run_name: win4c_local_warp
+windowing:
+  arm: local
+  warp: true
+  window_lr: 2.5e-2
+  gate_lr: 1.0e-2

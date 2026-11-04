@@ -1,0 +1,5 @@
+# Arm 1 (basic): HU ramp [-1000, 1000] -> [0, 1], repeated on the K = 11 stem channels (ClipChannels).
+base: base.yaml
+run_name: win1_clip
+windowing:
+  arm: clip

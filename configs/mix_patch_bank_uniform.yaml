@@ -1,0 +1,6 @@
+# Init test: mix_patch_bank with the 8 windows initialised evenly over [-1000, 1000] (width 500) instead of at the
+# body-HU quantiles (which put 5 of 8 on soft tissue).
+base: mix_patch_bank.yaml
+run_name: mix_patch_bank_uniform
+windowing:
+  window_init: uniform

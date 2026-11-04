@@ -1,0 +1,33 @@
+# Long runs, Jolia-like budget. Jolia (arXiv 2606.24570) trains Atlas on random 192^3 crops at 1.5 mm for 120k steps
+# x batch 48 = 5.8 M samples (~78 epochs); its plain CLIP baseline reaches 85.5 probe AUROC on CT-RATE, against ~76
+# for our 8-epoch 384^3 mix runs. Same data, text embeddings, CLIP head, augmentation and evaluation as the mix runs
+# (mix_base.yaml); what changes:
+# - 192^3 cubes at 1.5 mm (288 mm): in training their centre moves by up to +-48 voxels per axis around the volume
+#   centre (the volumes are centre-padded to 384^3), in val / test they are centred (as Jolia's eval);
+# - Atlas small laid out for 192^3 (token grids 32 / 8 / 2 instead of 64 / 16 / 4, same 79 M parameters);
+# - 75 epochs = 45 375 steps at batch 128 (5.8 M samples, as Jolia), warmup 1 000 steps, same peak LR and cosine;
+# - 4 volumes per GPU per forward (8x fewer voxels each; 8 is not faster), more loader workers, sparser
+#   checkpoints / plots. Speed: 6.7-7.0 s/step on 1 MI250X node (_bench_long), i.e. ~1.4 s/step on 4 MI300A nodes.
+base: mix_base.yaml
+run_name: long_base
+
+data:
+  crop: 192
+  crop_jitter: 48
+
+model:
+  atlas:
+    image_size: [192, 192, 192]
+
+optim:
+  warmup_steps: 1000
+
+training:
+  epochs: 75
+  micro_batch: 4
+  num_workers: 8
+  prefetch_factor: 2
+  ckpt_every: 1000
+  track_every: 500
+  keep_every_epochs: 10
+  val_every_epochs: 5

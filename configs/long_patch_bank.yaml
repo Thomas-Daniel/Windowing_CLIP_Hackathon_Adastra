@@ -1,0 +1,8 @@
+# Long run, per-patch learned windows, as mix_patch_bank (the best arm of the 8-epoch mix runs).
+base: long_base.yaml
+run_name: long_patch_bank
+windowing:
+  arm: patch_bank
+  k: 8
+  window_lr: 2.5e-2
+  gate_lr: 2.5e-3

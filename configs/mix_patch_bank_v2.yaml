@@ -1,0 +1,8 @@
+# V2: V1 + per-patch shifts up to +-1000 HU (was +-300) and widths x exp(+-2.5) (was +-1.5), so a channel can
+# become a lung window in lung patches.
+base: mix_patch_bank.yaml
+run_name: mix_patch_bank_v2
+windowing:
+  passthrough: true
+  shift_max_hu: 1000.0
+  width_max_log: 2.5

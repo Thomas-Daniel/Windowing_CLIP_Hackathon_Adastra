@@ -1,0 +1,5 @@
+# Second seed of win11_global_bank (init, data order and augmentation change), to measure run-to-run
+# variance against the win8 - win11 difference.
+base: win11_global_bank.yaml
+run_name: win11_global_bank_seed1
+seed: 1

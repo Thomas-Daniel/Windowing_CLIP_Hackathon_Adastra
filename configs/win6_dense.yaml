@@ -1,0 +1,6 @@
+# Control (not launched): 80 fixed 25-HU ramps fused into the stem's first conv
+# (RampConv3d). learned is a special case of dense.
+base: base.yaml
+run_name: win6_dense
+windowing:
+  arm: dense

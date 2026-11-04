@@ -1,0 +1,4 @@
+# Seed 1 of mix_pillar11 (init, data order and augmentation change).
+base: mix_pillar11.yaml
+run_name: mix_pillar11_seed1
+seed: 1

@@ -1,0 +1,5 @@
+# ViT counterpart of mix_pillar11.
+base: mixvit_base.yaml
+run_name: mixvit_pillar11
+windowing:
+  arm: pillar11

@@ -1,0 +1,6 @@
+# Noise test: mix_patch_bank with every window at least 200 HU wide (the learned banks end with 61-99 HU windows,
+# while CT-RATE's soft-tissue noise is 39 HU median, 55 HU p75, against 14-18 HU for the other sources).
+base: mix_patch_bank.yaml
+run_name: mix_patch_bank_wmin200
+windowing:
+  width_min_hu: 200

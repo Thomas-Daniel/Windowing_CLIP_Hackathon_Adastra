@@ -1,0 +1,8 @@
+# Mix, plain ViT backbone (mcw/vit3d.py): the same data, budget, CLIP head, optimiser and evaluation as the Atlas
+# mix runs (mix_base.yaml); only the image backbone changes: ViT-B/16, 384^3 -> 24^3 = 13 824 tokens of 768-d,
+# global attention, class token -> 1152-d. Per-patch windowing arms use the ViT token grid (16^3 voxels).
+base: mix_base.yaml
+run_name: mixvit_base
+model:
+  backbone: vit
+  vit: {patch: 16, dim: 768, depth: 12, heads: 12}

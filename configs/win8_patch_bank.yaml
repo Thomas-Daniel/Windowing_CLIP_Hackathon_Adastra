@@ -1,0 +1,10 @@
+# Approach A: K = 8 parametric windows per patch (centre, width), predicted from the patch's HU density
+# (80-bin histogram, 27 mm neighbourhood) by a 1x1x1 network. Global windows initialised at the
+# body-HU quantiles (no presets); the per-patch network starts at zero.
+base: base.yaml
+run_name: win8_patch_bank
+windowing:
+  arm: patch_bank
+  k: 8
+  window_lr: 2.5e-2           # global centres (100-HU units) / log-widths
+  gate_lr: 2.5e-3             # per-patch network (10x base LR)

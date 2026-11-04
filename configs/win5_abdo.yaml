@@ -1,0 +1,7 @@
+# Arm 5: classic abdominal window, level 60 / width 360 -> HU ramp [-120, 240] -> [0, 1], repeated on
+# the K = 11 stem channels (ClipChannels, as win1_clip with other bounds).
+base: base.yaml
+run_name: win5_abdo
+windowing:
+  arm: clip
+  clip_range: [-120, 240]     # [level - width/2, level + width/2] HU

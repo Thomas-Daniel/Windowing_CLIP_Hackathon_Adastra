@@ -1,0 +1,16 @@
+# Install the PyTorch build for your GPU first (the study used torch 2.5.1+rocm6.2 on AMD MI250X / MI300A,
+# see scripts/setup_env_adastra.sh); the CPU tests also pass with torch 2.6.
+numpy>=1.24
+nibabel==5.3.2
+pandas>=2.0
+openpyxl
+pyyaml>=6.0
+scipy
+scikit-learn
+transformers>=4.51,<5
+huggingface_hub
+safetensors
+timm>=1.0
+einops
+matplotlib
+tqdm

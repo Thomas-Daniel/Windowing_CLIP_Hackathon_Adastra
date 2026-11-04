@@ -1,0 +1,5 @@
+# mix192 reference, 11 channels mixed by the stem conv: the fixed pillar11 windows (as mix_pillar11).
+base: mix192_base.yaml
+run_name: mix192_pillar11
+windowing:
+  arm: pillar11

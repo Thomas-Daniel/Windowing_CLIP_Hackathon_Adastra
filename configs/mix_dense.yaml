@@ -1,0 +1,6 @@
+# 80 fixed 25-HU ramps over [-1000, 1000] fused into the stem's first conv (RampConv3d, as win6_dense, never run):
+# lossless HU input, the stem conv learns its own piecewise-linear windowing (global, one per output channel).
+base: mix_base.yaml
+run_name: mix_dense
+windowing:
+  arm: dense

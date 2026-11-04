@@ -1,0 +1,5 @@
+# Long run, reference without windowing: [-1000, 1000] ramp, as mix_clip.
+base: long_base.yaml
+run_name: long_clip
+windowing:
+  arm: clip

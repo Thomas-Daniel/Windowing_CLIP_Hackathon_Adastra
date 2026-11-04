@@ -1,0 +1,7 @@
+# Mix, control (as win11_global_bank): the same 8 learned windows shared by every patch, no per-patch network.
+base: mix_base.yaml
+run_name: mix_global_bank
+windowing:
+  arm: global_bank
+  k: 8
+  window_lr: 2.5e-2

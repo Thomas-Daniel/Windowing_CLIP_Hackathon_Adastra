@@ -1,0 +1,5 @@
+# As mix192_select_patch with 3 output channels (3 per-patch softmaxes), starting on lung / mediastinum / bone.
+base: mix192_select_patch.yaml
+run_name: mix192_select_patch3
+windowing:
+  select_out: 3

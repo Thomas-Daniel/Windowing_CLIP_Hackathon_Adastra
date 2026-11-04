@@ -1,0 +1,5 @@
+# ViT counterpart of mix_clip.
+base: mixvit_base.yaml
+run_name: mixvit_clip
+windowing:
+  arm: clip

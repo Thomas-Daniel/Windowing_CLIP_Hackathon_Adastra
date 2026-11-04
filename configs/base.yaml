@@ -1,0 +1,73 @@
+# Shared settings of the windowing study. Run configs (win*.yaml) inherit this file and
+# override ONLY `run_name` and the `windowing:` block: data, backbone size, CLIP batch,
+# number of steps, optimiser, augmentation and seed (hence data order) are identical.
+run_name: base
+output_root: ${SCRATCHDIR}/merlin_clip_runs
+seed: 0
+
+data:
+  manifest: ${SCRATCHDIR}/merlin_clip_data/manifest_384.csv        # scripts/preprocess_volumes.py
+  text_emb_dir: ${SCRATCHDIR}/merlin_clip_data/text_emb/qwen3_emb_8b  # scripts/embed_reports.py
+  text_pooling: last          # last (official Qwen3-Embedding pooling) | mean (pillar-pretrain cache)
+  train_splits: [train]       # Merlin official split
+  val_splits: [val]
+  val_max_items: 1024         # fixed random subset of val for monitoring (test is kept for eval/)
+
+model:
+  atlas: {}                   # {} = Pillar-0 Atlas small d2d2d8 (mcw/backbone.py PILLAR0_ATLAS_SMALL), from scratch
+  text_proj: mlp              # 4096 -> 2624 -> 1152, as pillar-pretrain's CacheTextEncoder
+  init_temperature: 0.07
+  max_logit_scale: 100
+  precision: bf16
+  grad_checkpointing: false
+  conv_impl: gemm             # gemm (mcw/gemm_conv3d.py) | native (MIOpen: minutes per 3D conv on MI250X)
+
+windowing:                    # mcw/windowing_arms.py (input clamped to [-1000, 1000] HU for every arm)
+  arm: null                   # clip | pillar11 | learned | local | local_shuf | dense, set by each run config
+  k: 11                       # channels to the stem for the channel arms (same stem everywhere)
+  edges_step: 25.0            # HU grid of the learned curves / dense ramps: 80 bins on [-1000, 1000]
+  patch: null                 # local gate grid; null = Atlas patch size (6 -> 64^3 patches, the token grid)
+  window_lr: null             # LR of the arm's parameters (curves, gate); null = base LR, no weight decay
+  clip_range: null            # clip arm ramp [lo, hi] HU; null = [-1000, 1000] (win5_abdo: [-120, 240])
+  gate_lr: null               # local arms: LR of the gate network; null = window_lr
+  warp: false                 # learned / local: per-channel learned HU shift + width factor before the curves
+  # patch arms (mcw/patch_windows.py): per-patch windows from the patch HU density, no presets
+  hu_hist: ${SCRATCHDIR}/merlin_clip_data/hu_hist_80.npz   # data-driven init (scripts/hu_histogram.py)
+  density_context: 3          # density of the patch + its 26 neighbours (3 = 27 mm cube); 1 = patch only
+  hidden: 64                  # width of the per-patch 1x1x1 network
+  check_at_step: 300          # learned arms: alert if the curves moved less than min_curve_drift by then
+  min_curve_drift: 0.02       #   (max |curve - init curve| in output units [0, 1])
+  min_patch_spread_hu: 5.0    # patch arms: alert if the per-patch windows differ by less than this (std across patches, HU)
+
+augment:                      # on raw HU before windowing, same RNG stream in every run
+  rotate_deg: 20              # axial-plane rotation, as Pillar-0 (--gpu-rotation-degrees 20 -p 0.5)
+  rotate_p: 0.5
+
+optim:                        # pillar-pretrain Merlin script: lr 2.5e-4, warmup 300, wd 0, cosine
+  lr: 2.5e-4
+  warmup_steps: 300
+  weight_decay: 0.0
+  betas: [0.9, 0.999]
+  eps: 1.0e-8
+
+training:
+  global_batch: 128           # CLIP batch (negatives), = world x accum_steps x micro_batch
+  micro_batch: 1              # volumes per GPU per forward (fwd+bwd peaks 32-39 GB; 2 does not fit a 64 GB MI250X GCD)
+  accum_steps: null           # null = global_batch / (n_gpus x micro_batch): 16 on 1 MI250X node, 8 on 2, 32 on 1 MI300A node
+  epochs: 20                  # 15300 train volumes // 128 = 119 steps/epoch -> 2380 steps (~35 h on 1 node)
+  stop_at_step: null          # stop early without changing the LR schedule
+  grad_clip: 1.0
+  num_workers: 4             # each worker collates a whole local batch (16 x 113 MB): 4 x 1 in flight
+  prefetch_factor: 1          # = 7 GB host RAM per rank
+  log_every: 10
+  track_every: 50             # refresh <output_root>/progress.png + progress.txt (scripts/track_runs.py), and after each val
+  ckpt_every: 100             # ckpt_last.pt (resume point; previous kept as ckpt_prev.pt), + every epoch end
+  keep_every_epochs: 5        # ckpt_epochXXX.pt kept (epochs 5, 10, 15, 20)
+  max_nonfinite_steps: 20     # skipped NaN/inf steps in a row before aborting
+  val_every_epochs: 2
+  eval_batch: 2
+
+eval:
+  prompts: ${SCRATCHDIR}/merlin_clip_data/text_emb/qwen3_emb_8b/prompts.npz
+  findings_csv: /lus/work/CT3/cad17796/SHARED/merlinabdominalctdataset/zero_shot_findings_disease_cls.csv
+  five_year_csv: /lus/work/CT3/cad17796/SHARED/merlinabdominalctdataset/five_years_disease_task.csv

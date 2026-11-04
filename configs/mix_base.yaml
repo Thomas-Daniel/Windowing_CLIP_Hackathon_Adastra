@@ -1,0 +1,28 @@
+# Chest / abdomen mix (variant D): Merlin + CancerVerse (abdomen) and CT-RATE + INSPECT
+# (chest), 77 506 train volumes (47.8 % abdomen). Same model, CLIP batch, optimiser and augmentation as
+# the Merlin study (base.yaml); only data, budget and evaluation change. Run configs (mix_*.yaml)
+# override run_name, seed and the windowing block.
+base: base.yaml
+run_name: mix_base
+output_root: ${SCRATCHDIR}/mix_clip_runs
+
+data:
+  manifest: ${SCRATCHDIR}/chest_abdo_clip_data/manifest_384_D.csv        # scripts/preprocess_multisource.py
+  text_emb_dir: ${SCRATCHDIR}/chest_abdo_clip_data/text_emb/qwen3_emb_8b_D # scripts/embed_reports.py
+  train_splits: [train]
+  val_splits: [val]           # 1 500 monitoring volumes per domain, patients out of train
+  val_max_items: 1024
+
+windowing:
+  hu_hist: ${SCRATCHDIR}/chest_abdo_clip_data/hu_hist_80_mix.npz   # body-HU histogram of the mix (patch arms' init)
+
+training:
+  epochs: 8                   # 77 506 // 128 = 605 steps/epoch -> 4 840 steps (Merlin study: 2 380)
+  balance_domains: true       # every global batch = 64 abdomen + 64 chest (mcw/data.py BalancedShardSampler)
+  keep_every_epochs: 2
+  val_every_epochs: 1
+
+eval:
+  benchmark: multi            # eval/evaluate.py report_multi: per-source retrieval, zero-shot, probes
+  labels: ${SCRATCHDIR}/chest_abdo_clip_data/eval_labels_D.csv        # eval/benchmarks.py build_labels
+  prompts: ${SCRATCHDIR}/chest_abdo_clip_data/text_emb/qwen3_emb_8b_D/prompts.npz

@@ -1,0 +1,4 @@
+# Seed 1 of mix_global_bank (init, data order and augmentation change).
+base: mix_global_bank.yaml
+run_name: mix_global_bank_seed1
+seed: 1

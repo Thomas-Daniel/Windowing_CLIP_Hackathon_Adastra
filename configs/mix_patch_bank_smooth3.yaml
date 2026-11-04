@@ -1,0 +1,7 @@
+# Noise test: mix_patch_bank whose windows read a 3^3 box-smoothed HU (4.5 mm), plus the raw [-1000, 1000] ramp
+# channel (V1) for the fine detail.
+base: mix_patch_bank.yaml
+run_name: mix_patch_bank_smooth3
+windowing:
+  smooth: 3
+  passthrough: true

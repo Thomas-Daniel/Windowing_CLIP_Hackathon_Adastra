@@ -1,0 +1,20 @@
+# Cheap protocol for the softmax-selection tests (2026-10-28, user: "sur moins de données pour pas trop consommer
+# d'heures"): the mix runs (mix_base.yaml: same data, 8 epochs = 4 840 steps, warmup 300, LR, batch 128,
+# evaluation) on the long runs' 192^3 cubes at 1.5 mm (long_base.yaml: centre jitter +-48 voxels in training,
+# centred in val / test; Atlas laid out for 192^3). ~8x fewer voxels per step, ~70 MI300A h per run instead of
+# ~630 at 384^3. Not comparable with the 384^3 mix runs: compare mix192_* runs with each other only.
+base: mix_base.yaml
+run_name: mix192_base
+
+data:
+  crop: 192
+  crop_jitter: 48
+
+model:
+  atlas:
+    image_size: [192, 192, 192]
+
+training:
+  micro_batch: 4
+  num_workers: 8
+  prefetch_factor: 2

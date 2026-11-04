@@ -1,0 +1,8 @@
+# Fixed 4-window baseline: lung (chest), abdomen, liver (narrow soft tissue) and bone, i.e. 4 of the 10 pillar11
+# presets, without the min-max channel (4 channels to the stem).
+base: mix_base.yaml
+run_name: mix_win4
+windowing:
+  arm: windows
+  windows: [lung, abdomen, liver, bone]
+  minmax: false
