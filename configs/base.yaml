@@ -20,7 +20,8 @@ model:
   max_logit_scale: 100
   precision: bf16
   grad_checkpointing: false
-  conv_impl: gemm             # gemm (mcw/gemm_conv3d.py) | native (MIOpen: minutes per 3D conv on MI250X)
+  conv_impl: native           # native (MIOpen F.conv3d) | gemm (mcw/gemm_conv3d.py). MIOpen 3D convs need a recent ROCm:
+                              # they fail with torch 2.5.1+rocm6.2 and 2.14.1+rocm7.2, work with 2.15.0+rocm7.14 (docs/wave1.md)
 
 windowing:                    # mcw/windowing_arms.py (input clamped to [-1000, 1000] HU for every arm)
   arm: null                   # clip | pillar11 | learned | local | local_shuf | dense, set by each run config

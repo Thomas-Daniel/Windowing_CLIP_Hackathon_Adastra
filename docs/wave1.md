@@ -3,6 +3,31 @@
 This branch adds to `main` only what these runs need. All runs use the Atlas backbone, a global batch of 128 and
 4 MI300A nodes each.
 
+## This branch: native MIOpen 3D convolutions (`wave1-atlas-192-miopen`)
+
+`wave1-atlas-192` computes every Conv3d of Atlas as im2col + GEMM (`model.conv_impl: gemm`, `mcw/gemm_conv3d.py`),
+because MIOpen's 3D convs were unusable with the software stack the runs used (torch 2.5.1+rocm6.2). This branch is
+the same code with **`model.conv_impl: native`** (`configs/base.yaml`): the convs go through `F.conv3d`, i.e. MIOpen.
+It is meant for a newer PyTorch / ROCm. The GEMM path is still there: set `model.conv_impl: gemm` to compare.
+
+Differences from `wave1-atlas-192`:
+- `configs/base.yaml`: `conv_impl: native`.
+- `scripts/adastra_bind.sh`: MIOpen user db and kernel cache on the node-local `/tmp`, one per rank
+  (`/tmp/miopen_<job>_<local rank>`). `scripts/env_adastra.sh` no longer points them to `$SCRATCHDIR/.miopen`.
+- `scripts/launch_wave.sh`: `VENV_DIR` is required. The default venv of `wave1-atlas-192` (torch 2.5.1) cannot run
+  these convs.
+
+Measured on 1 exclusive MI300A (bf16, 192→192 3³ conv on 1 × 192 × 128³, TFLOP/s; jobs 5997815 / 6003917):
+
+| torch / ROCm | MIOpen `F.conv3d`, fwd / fwd+bwd | `GemmConv3d`, fwd / fwd+bwd |
+|---|---|---|
+| 2.5.1 / 6.2 (runs so far) | fails (`miopenStatusInternalError`) | 154-163 / 125-127 |
+| 2.14.1 / 7.2 | fails | unusable (hipBLASLt at 0.5 TFLOP/s on these shapes) |
+| 2.15.0 / 7.14 | 103-120 / 164-169, equal to `GemmConv3d` to 5e-5 | 138-147 / 111-126 |
+
+The first MIOpen call of each conv shape takes a few seconds to ~17 s (kernel search). The wave1 numbers in this file
+(timings, costs) were measured with the GEMM path.
+
 | group | configs (`configs/<name>.yaml`) | runs | epochs |
 |---|---|---|---|
 | number of channels, single windows | `mix192r_fixed_reg2`, `mix192r_fixed_reg4`, `mix192r_hu_cdf`, `mix192r_abdo`, each `+ _seed1, _seed2` | 12 | 8 |

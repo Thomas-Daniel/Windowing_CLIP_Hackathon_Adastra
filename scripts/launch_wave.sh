@@ -6,11 +6,12 @@
 #   LONG=1 ACCOUNT=<project> bash scripts/launch_wave.sh <run> ...   24-epoch runs: evals of ckpt_epoch008 / 016 / final
 #
 # <run> = a config name in configs/ (without .yaml). Run from the repository root.
-# VENV_DIR defaults to the venv the runs used on Adastra (torch 2.5.1+rocm6.2, readable by group cad17796).
+# VENV_DIR (required): a venv whose PyTorch / ROCm runs MIOpen 3D convs on MI300A (this branch uses model.conv_impl:
+# native); measured OK with torch 2.15.0+rocm7.14, failing with 2.5.1+rocm6.2 and 2.14.1+rocm7.2.
 # RUNS_ROOT must be the configs' output_root (configs/mix_base.yaml: ${SCRATCHDIR}/mix_clip_runs).
 set -eu
 ACCOUNT="${ACCOUNT:?set ACCOUNT to the Slurm project to charge}"
-VENV_DIR="${VENV_DIR:-/lus/scratch/CT3/cad17796/thdaniel/venvs/merlin_clip_1113}"
+VENV_DIR="${VENV_DIR:?set VENV_DIR to a venv with a ROCm whose MIOpen 3D convs work (see docs/wave1.md)}"
 RUNS_ROOT="${RUNS_ROOT:-$SCRATCHDIR/mix_clip_runs}"
 NODES="${NODES:-4}"
 SHAPE="--constraint=MI300 --gpus-per-node=4 --ntasks-per-node=4 --cpus-per-task=48"

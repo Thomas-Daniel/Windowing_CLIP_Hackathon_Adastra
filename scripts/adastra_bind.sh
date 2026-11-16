@@ -17,6 +17,12 @@ export LOCAL_RANK="${SLURM_LOCALID}"
 export WORLD_SIZE="${SLURM_NTASKS}"
 export MASTER_ADDR="${MASTER_ADDR:-$(scontrol show hostname "${SLURM_JOB_NODELIST}" | head -n 1)}"
 export MASTER_PORT="${MASTER_PORT:-29400}"
+# MIOpen (model.conv_impl: native): user db and kernel cache on the node-local /tmp, one per rank. A db on Lustre
+# ($SCRATCHDIR/.miopen) broke on MI300A (miopenStatusInternalError), and one shared between processes or MIOpen
+# versions gives "File is unwritable". Each rank tunes its conv kernels once per job.
+export MIOPEN_USER_DB_PATH="/tmp/miopen_${SLURM_JOB_ID:-$$}_${SLURM_LOCALID}/db"
+export MIOPEN_CUSTOM_CACHE_DIR="/tmp/miopen_${SLURM_JOB_ID:-$$}_${SLURM_LOCALID}/cache"
+mkdir -p "$MIOPEN_USER_DB_PATH" "$MIOPEN_CUSTOM_CACHE_DIR"
 LOCAL_N="${SLURM_NTASKS_PER_NODE:?expected SLURM_NTASKS_PER_NODE to be set}"
 
 if [ "${SKIP_NUMA_BIND:-0}" = "1" ]; then

@@ -10,9 +10,7 @@ export HSA_XNACK=0
 # numpy madvises every array >= 4 MB as hugepage; on these nodes (THP defrag=madvise) each
 # 113 MB volume load then direct-compacts memory and loaders slow 3-4x after ~2.5 h.
 export NUMPY_MADVISE_HUGEPAGE=0
-# MIOpen (only used with model.conv_impl=native): its default user db was read-only on MI300A (miopenStatusInternalError)
-export MIOPEN_USER_DB_PATH="${MIOPEN_USER_DB_PATH:-$SCRATCHDIR/.miopen/db}" MIOPEN_CUSTOM_CACHE_DIR="${MIOPEN_CUSTOM_CACHE_DIR:-$SCRATCHDIR/.miopen/cache}"
-mkdir -p "$MIOPEN_USER_DB_PATH" "$MIOPEN_CUSTOM_CACHE_DIR"
+# MIOpen user db / kernel cache: set per rank on the node-local /tmp by scripts/adastra_bind.sh
 # Multi-node: RCCL over Slingshot through the libfabric plugin (sets NCCL_NET_PLUGIN, FI_* and
 # NCCL_NET_GDR_LEVEL); without it RCCL falls back to TCP sockets. RCCL_OFI=0 disables it.
 # The module sets NCCL_NET_PLUGIN=librccl-net.so, which the RCCL bundled with torch 2.5.1 turns into
