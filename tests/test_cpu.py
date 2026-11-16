@@ -621,10 +621,72 @@ def test_select() -> None:
     print("window_select OK", flush=True)
 
 
+def test_fixed_bank() -> None:
+    """freeze_windows (configs mix_fixed_reg{4,8,16}): global_bank + uniform init + frozen windows = K fixed regular
+    sigmoid windows; no window parameter is trained, the rest of the model is."""
+    from mcw.windowing_arms import param_groups
+    torch.manual_seed(0)
+    for k in (4, 8, 16):
+        cfg = small_cfg("global_bank")
+        cfg["windowing"] |= {"k": k, "window_init": "uniform", "freeze_windows": True}
+        model = CTClip(cfg, text_dim=64)
+        bank = model.adapter
+        sp = 2000.0 / k
+        assert torch.allclose(bank.center, -1000 + sp * (torch.arange(k) + 0.5), atol=1e-3)
+        assert torch.allclose(bank.width, torch.full((k,), 2 * sp), rtol=1e-5)
+        trainable = [n for n, p_ in bank.named_parameters() if p_.requires_grad]
+        assert not trainable, trainable
+        groups = param_groups(model, 1e-3, 0.05, window_lr=2.5e-2)
+        ids = {id(p_) for g in groups for p_ in g["params"]}
+        assert id(bank.center100) not in ids and id(bank.log_width) not in ids and len(groups) == 2
+        x = torch.randint(-1024, 2000, (2, 1, 96, 96, 96)).float()
+        out = bank(x)
+        xc = x.clamp(-1000, 1000)[:, 0]
+        ref = torch.stack([torch.sigmoid(4 * (xc - c) / w) for c, w in zip(bank.center, bank.width)], 1)
+        assert out.shape[1] == k and torch.allclose(out, ref, atol=1e-5)
+        model.train()
+        opt = torch.optim.AdamW(groups)
+        before = {n: p_.detach().clone() for n, p_ in model.named_parameters()}
+        txt = F.normalize(torch.randn(2, 64), dim=-1)
+        loss, _ = clip_loss(model.encode_image(x), model.encode_text(txt), model.scale())
+        loss.backward()
+        opt.step()
+        moved = {n for n, p_ in model.named_parameters() if not torch.equal(p_, before[n])}
+        assert not any(n.startswith("adapter.") for n in moved), moved
+        assert any(n.startswith("visual.") for n in moved)
+        print(f"fixed bank k={k}: centres {bank.center[0]:.0f}..{bank.center[-1]:.0f} HU, width {bank.width[0]:.0f} HU, "
+              f"frozen, {len(moved)} other tensors trained OK", flush=True)
+    print("fixed bank OK", flush=True)
+
+
+
+def test_downsample() -> None:
+    """data.downsample (mix192r_* runs): mcw/data.py block_mean_int16 = mean of every f^3 block rounded half up to
+    int16, for the full HU range (negative means included), and the same values through the dataset."""
+    from mcw.data import block_mean_int16
+    rng = np.random.default_rng(0)
+    v = rng.integers(-1024, 3072, size=(12, 16, 20)).astype(np.int16)
+    v[:2, :2, :2] = [[[-1, -2], [-1, -2]], [[-1, -2], [-1, -2]]]      # block mean -1.5 -> -1 (half up)
+    for f in (2, 4):
+        d, h, w = (n // f for n in v.shape)
+        ref = np.floor(v.astype(np.float64).reshape(d, f, h, f, w, f).mean(axis=(1, 3, 5)) + 0.5).astype(np.int16)
+        out = block_mean_int16(v, f)
+        assert out.dtype == np.int16 and out.shape == (d, h, w) and np.array_equal(out, ref), f
+    assert block_mean_int16(v, 2)[0, 0, 0] == -1
+    try:
+        block_mean_int16(v[:, :, :19], 2)
+        raise AssertionError("odd shape accepted")
+    except ValueError:
+        pass
+    print("downsample OK (block mean, round half up, int16)", flush=True)
+
+
+
 if __name__ == "__main__":
     import sys
     tests = {"arms": test_arms, "patch": test_patch_arms, "gemm": test_gemm_conv3d, "model": test_model_and_gradcache,
              "vit": test_vit, "route": test_route, "bank_opts": test_bank_opts,
-             "win_cdf": test_win_cdf, "select": test_select}
+             "win_cdf": test_win_cdf, "select": test_select, "fixed": test_fixed_bank,
+             "downsample": test_downsample}
     for name in sys.argv[1:] or list(tests):      # e.g. python -m tests.test_cpu patch gemm
         tests[name]()

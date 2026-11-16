@@ -1,0 +1,5 @@
+# Resized 192^3, the fixed pillar11 windows (as mix_pillar11).
+base: mix192r_base.yaml
+run_name: mix192r_pillar11
+windowing:
+  arm: pillar11

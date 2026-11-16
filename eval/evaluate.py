@@ -72,7 +72,8 @@ def extract(args) -> None:
             lambda g: g.sample(n=min(len(g), args.max_train_per_source), random_state=0))
         keep = set(man[man["split"] != "train"]["study_id"]) | set(tr["study_id"])
     ds = MerlinClipDataset(cfg["data"]["manifest"], texts, args.splits, max_items=args.max_items, seed=0, keep_ids=keep,
-                           crop=cfg["data"].get("crop"))                 # long runs: centred crop^3, as in training val
+                           crop=cfg["data"].get("crop"),                 # long runs: centred crop^3, as in training val
+                           downsample=cfg["data"].get("downsample"))     # resized runs: the same block-mean resize
     shard = list(range(len(ds)))[rank::world]
     loader = torch.utils.data.DataLoader(ds, batch_size=args.batch, sampler=shard, num_workers=args.num_workers,
                                          collate_fn=collate)

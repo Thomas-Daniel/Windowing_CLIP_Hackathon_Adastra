@@ -1,0 +1,4 @@
+# Seed 1 of mix192r_abdo.
+base: mix192r_abdo.yaml
+run_name: mix192r_abdo_seed1
+seed: 1

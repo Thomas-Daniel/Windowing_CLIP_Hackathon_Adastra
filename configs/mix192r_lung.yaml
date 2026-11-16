@@ -1,0 +1,7 @@
+# Lung-window control (user, 2026-11-13): mix192r_clip with the single ramp set to the lung window [-1350, 150] HU
+# (pillar11's lung preset, 0.23 at -1000 HU after the [-1000, 1000] clamp) instead of [-1000, 1000], repeated 11 times.
+# Hypothesis: the clip ramp already acts as a lung window, so this run should score like clip everywhere.
+base: mix192r_clip.yaml
+run_name: mix192r_lung
+windowing:
+  clip_range: [-1350, 150]

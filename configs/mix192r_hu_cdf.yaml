@@ -1,0 +1,6 @@
+# mix_hu_cdf (one monotone curve = CDF of the body HU, repeated 11 times) in the full-field-of-view 192^3 regime:
+# a single channel with strong soft-tissue contrast.
+base: mix192r_base.yaml
+run_name: mix192r_hu_cdf
+windowing:
+  arm: cdf

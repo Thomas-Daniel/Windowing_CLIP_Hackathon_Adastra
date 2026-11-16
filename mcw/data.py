@@ -35,12 +35,17 @@ class MerlinClipDataset(torch.utils.data.Dataset):
     memory map so only the cube's rows are loaded. Centred by default (eval); with ``crop_jitter`` > 0 its centre
     moves by up to +-crop_jitter voxels per axis around the volume centre (the volumes are centre-padded, so the
     body stays in view), drawn from (crop_seed, crop_epoch, index): set ``crop_epoch`` before each epoch's
-    DataLoader (workers are re-forked every epoch) and the crops do not depend on the GPU layout."""
+    DataLoader (workers are re-forked every epoch) and the crops do not depend on the GPU layout.
+    ``downsample`` f (instead of ``crop``): the whole volume resized to (384 / f)^3 by averaging f^3 blocks of HU
+    (= trilinear resize by an integer factor), rounded to int16: the full field of view at f x 1.5 mm."""
 
     def __init__(self, manifest: str, texts: TextEmbeddings, splits: list[str],
                  max_items: int | None = None, seed: int = 0, keep_ids: set | None = None,
-                 crop: int | None = None, crop_jitter: int = 0, crop_seed: int = 0):
+                 crop: int | None = None, crop_jitter: int = 0, crop_seed: int = 0, downsample: int | None = None):
         self.crop, self.crop_jitter, self.crop_seed, self.crop_epoch = crop, crop_jitter, crop_seed, 0
+        self.downsample = int(downsample) if downsample and int(downsample) > 1 else None
+        if self.crop and self.downsample:
+            raise ValueError("data.crop and data.downsample are exclusive")
         df = pd.read_csv(manifest)
         df["study_id"] = df["study_id"].astype(str)
         df = df[df["split"].isin(splits) & df["study_id"].isin(texts.row)]
@@ -72,10 +77,22 @@ class MerlinClipDataset(torch.utils.data.Dataset):
             z, y, x = self.crop_start(v.shape, i)
             c = self.crop
             vol = torch.from_numpy(np.ascontiguousarray(v[z:z + c, y:y + c, x:x + c]))
+        elif self.downsample:
+            vol = torch.from_numpy(block_mean_int16(np.load(self.paths[i]), self.downsample))
         else:
             vol = torch.from_numpy(np.load(self.paths[i]))         # (D, H, W) int16 HU
         return {"idx": i, "study_id": self.ids[i], "volume": vol[None],
                 "text": torch.from_numpy(self.texts[self.ids[i]])}
+
+
+def block_mean_int16(v: np.ndarray, f: int) -> np.ndarray:
+    """(D, H, W) int16 -> (D / f, H / f, W / f) int16: mean of every f^3 block, rounded to the nearest HU."""
+    d, h, w = (n // f for n in v.shape)
+    if (d * f, h * f, w * f) != v.shape:
+        raise ValueError(f"volume shape {v.shape} not divisible by {f}")
+    s = v.reshape(d, f, h, f, w, f).sum(axis=(1, 3, 5), dtype=np.int32)
+    n = f ** 3
+    return np.floor_divide(s + n // 2, n).astype(np.int16)
 
 
 def collate(items: list[dict]) -> dict:

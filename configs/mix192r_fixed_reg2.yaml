@@ -1,0 +1,9 @@
+# K curve in the full-field-of-view 192^3 regime: 2 FIXED sigmoid windows spread evenly over [-1000, 1000] HU
+# (centres -500 / +500, width 2000), nothing learned. Never tested before: where is the threshold between 1 and 4 channels?
+base: mix192r_base.yaml
+run_name: mix192r_fixed_reg2
+windowing:
+  arm: global_bank
+  k: 2
+  window_init: uniform
+  freeze_windows: true

@@ -258,7 +258,8 @@ def main() -> None:
     np.random.seed(cfg["seed"])
 
     texts = TextEmbeddings(dcfg["text_emb_dir"], dcfg["text_pooling"])
-    crop = dict(crop=dcfg.get("crop"), crop_seed=cfg["seed"])          # long runs: crop^3 cubes (val: centred)
+    crop = dict(crop=dcfg.get("crop"), crop_seed=cfg["seed"],          # long runs: crop^3 cubes (val: centred)
+                downsample=dcfg.get("downsample"))                     # or the whole volume resized by block mean
     train_ds = MerlinClipDataset(dcfg["manifest"], texts, dcfg["train_splits"], max_items=dcfg.get("max_train_items"),
                                  crop_jitter=int(dcfg.get("crop_jitter", 0)), **crop)
     val_ds = MerlinClipDataset(dcfg["manifest"], texts, dcfg["val_splits"], max_items=dcfg["val_max_items"], seed=cfg["seed"],

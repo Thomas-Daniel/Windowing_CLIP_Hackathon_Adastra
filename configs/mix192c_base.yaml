@@ -1,0 +1,8 @@
+# Jitter control (user, 2026-11-12): mix192_base.yaml with the 192^3 crop always CENTRED in training too
+# (crop_jitter 0), i.e. without the +-48 voxel random shift. Question: is the gain of the crop over the resized
+# full field of view (mix192r_*) for clip due to the field of view or to this translation augmentation?
+base: mix192_base.yaml
+run_name: mix192c_base
+
+data:
+  crop_jitter: 0

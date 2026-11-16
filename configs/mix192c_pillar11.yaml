@@ -1,0 +1,5 @@
+# Centred 192^3 crop without jitter, fixed pillar11 windows.
+base: mix192c_base.yaml
+run_name: mix192c_pillar11
+windowing:
+  arm: pillar11

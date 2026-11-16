@@ -1,0 +1,6 @@
+# Abdomen-window control, the counterpart of mix192r_lung: the single ramp set to the abdomen preset [-160, 240] HU,
+# repeated 11 times. Does one soft-tissue window recover the abdominal gain, and what does it lose on the chest?
+base: mix192r_clip.yaml
+run_name: mix192r_abdo
+windowing:
+  clip_range: [-160, 240]

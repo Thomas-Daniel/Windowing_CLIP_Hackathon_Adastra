@@ -1,0 +1,4 @@
+# Seed 2 of mix192c_pillar11.
+base: mix192c_pillar11.yaml
+run_name: mix192c_pillar11_seed2
+seed: 2

@@ -1,0 +1,4 @@
+# Seed 1 of mix192r_lung.
+base: mix192r_lung.yaml
+run_name: mix192r_lung_seed1
+seed: 1

@@ -1,0 +1,8 @@
+# mix_fixed_reg4 (4 fixed regular sigmoid windows, width 1000 HU) in the full-field-of-view 192^3 regime.
+base: mix192r_base.yaml
+run_name: mix192r_fixed_reg4
+windowing:
+  arm: global_bank
+  k: 4
+  window_init: uniform
+  freeze_windows: true

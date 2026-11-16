@@ -169,6 +169,8 @@ class PatchWindowBank(nn.Module):
       scan_context   a per-scan shift of every window from the volume's HU histogram and soft-tissue noise level;
       init           "quantile" (body-HU quantiles) or "uniform" (evenly over [-1000, 1000]);
       fixed_windows  hybrid: the 11 fixed pillar11 channels (10 presets + min-max) come before the learned ones.
+    build_patch_arm's ``freeze_windows`` keeps the K windows at their init: with global_bank + init "uniform", a
+    fixed bank of K regular windows (nothing learned in the input arm).
     """
 
     def __init__(self, k: int = 8, patch: int = 6, step: float = 25.0, context: int = 3, hidden: int = 64,
@@ -611,7 +613,7 @@ def build_patch_arm(arm: str, w: dict, patch: int) -> nn.Module:
                   context=int(w.get("density_context", 3)), hidden=int(w.get("hidden", 64)),
                   hu_hist=w.get("hu_hist"))
     if arm in ("patch_bank", "global_bank", "patch_bank_shuf"):
-        return PatchWindowBank(per_patch=arm != "global_bank", control="shuffle" if arm.endswith("_shuf") else None,
+        bank = PatchWindowBank(per_patch=arm != "global_bank", control="shuffle" if arm.endswith("_shuf") else None,
                                shift_max_hu=float(w.get("shift_max_hu", 300.0)),
                                width_max_log=float(w.get("width_max_log", 1.5)),
                                passthrough=bool(w.get("passthrough", False)),
@@ -619,6 +621,10 @@ def build_patch_arm(arm: str, w: dict, patch: int) -> nn.Module:
                                scan_context=bool(w.get("scan_context", False)),
                                init=str(w.get("window_init", "quantile")),
                                fixed_windows=bool(w.get("fixed_windows", False)), **common)
+        if w.get("freeze_windows", False):                 # the windows stay at their init (window_lr does not apply)
+            bank.center100.requires_grad_(False)
+            bank.log_width.requires_grad_(False)
+        return bank
     if arm == "patch_route":
         common.pop("context")
         return PatchWindowRouter(n_windows=int(w.get("n_windows", 16)), route_context=int(w.get("route_context", 9)),

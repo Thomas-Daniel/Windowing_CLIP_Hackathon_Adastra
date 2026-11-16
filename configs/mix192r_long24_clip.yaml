@@ -1,0 +1,8 @@
+# Resized 192^3 (full field of view, 3 mm), 24 epochs (14 520 steps): does the clip / pillar11 gap close with a
+# 3x budget in the regime where it exists? Checkpoints at epochs 8 / 16 / 24 (as mix_long24_*).
+base: mix192r_clip.yaml
+run_name: mix192r_long24_clip
+training:
+  epochs: 24
+  keep_every_epochs: 8
+  val_every_epochs: 2

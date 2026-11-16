@@ -1,0 +1,4 @@
+# Seed 2 of mix192r_long24_clip.
+base: mix192r_long24_clip.yaml
+run_name: mix192r_long24_clip_seed2
+seed: 2

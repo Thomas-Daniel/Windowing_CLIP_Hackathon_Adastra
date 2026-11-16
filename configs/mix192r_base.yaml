@@ -1,0 +1,18 @@
+# Resized 192^3 (user, 2026-11-12): the WHOLE 384^3 volume resized to 192^3 by 2x2x2 block mean of the HU (3 mm
+# isotropic, 576 mm field of view) instead of mix192's 192^3 crop at 1.5 mm (288 mm). Same token count, budget and
+# Atlas layout as mix192_base.yaml; no crop, hence no crop jitter. Question: does the windowing gain at 384^3 come
+# from the field of view or from the resolution? More loader workers: every volume is read whole (113 MB).
+base: mix_base.yaml
+run_name: mix192r_base
+
+data:
+  downsample: 2
+
+model:
+  atlas:
+    image_size: [192, 192, 192]
+
+training:
+  micro_batch: 4
+  num_workers: 12
+  prefetch_factor: 2

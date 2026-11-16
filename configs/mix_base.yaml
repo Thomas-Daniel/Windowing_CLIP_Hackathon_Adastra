@@ -7,14 +7,14 @@ run_name: mix_base
 output_root: ${SCRATCHDIR}/mix_clip_runs
 
 data:
-  manifest: ${SCRATCHDIR}/chest_abdo_clip_data/manifest_384_D.csv        # scripts/preprocess_multisource.py
-  text_emb_dir: ${SCRATCHDIR}/chest_abdo_clip_data/text_emb/qwen3_emb_8b_D # scripts/embed_reports.py
+  manifest: /lus/scratch/CT3/cad17796/thdaniel/chest_abdo_clip_data/manifest_384_D.csv        # scripts/preprocess_multisource.py
+  text_emb_dir: /lus/scratch/CT3/cad17796/thdaniel/chest_abdo_clip_data/text_emb/qwen3_emb_8b_D # scripts/embed_reports.py
   train_splits: [train]
   val_splits: [val]           # 1 500 monitoring volumes per domain, patients out of train
   val_max_items: 1024
 
 windowing:
-  hu_hist: ${SCRATCHDIR}/chest_abdo_clip_data/hu_hist_80_mix.npz   # body-HU histogram of the mix (patch arms' init)
+  hu_hist: /lus/scratch/CT3/cad17796/thdaniel/chest_abdo_clip_data/hu_hist_80_mix.npz   # body-HU histogram of the mix (patch arms' init)
 
 training:
   epochs: 8                   # 77 506 // 128 = 605 steps/epoch -> 4 840 steps (Merlin study: 2 380)
@@ -24,5 +24,5 @@ training:
 
 eval:
   benchmark: multi            # eval/evaluate.py report_multi: per-source retrieval, zero-shot, probes
-  labels: ${SCRATCHDIR}/chest_abdo_clip_data/eval_labels_D.csv        # eval/benchmarks.py build_labels
-  prompts: ${SCRATCHDIR}/chest_abdo_clip_data/text_emb/qwen3_emb_8b_D/prompts.npz
+  labels: /lus/scratch/CT3/cad17796/thdaniel/chest_abdo_clip_data/eval_labels_D.csv        # eval/benchmarks.py build_labels
+  prompts: /lus/scratch/CT3/cad17796/thdaniel/chest_abdo_clip_data/text_emb/qwen3_emb_8b_D/prompts.npz

@@ -21,6 +21,10 @@ mkdir -p "$MIOPEN_USER_DB_PATH" "$MIOPEN_CUSTOM_CACHE_DIR"
 if [ "${SLURM_JOB_NUM_NODES:-1}" -gt 1 ] && [ "${RCCL_OFI:-1}" = "1" ]; then
     module load aws-ofi-rccl/1.18.0_rocm6
     unset NCCL_NET_PLUGIN
+    # CXI fork safety: the DataLoader re-forks its workers every epoch, after RCCL has registered its memory with
+    # the NIC; without this, every collective then slows down (4 MI300 nodes: 1.5 -> 2.5 s/step from step ~400-600,
+    # all_reduce 0.04 -> 0.30 s; 32 nodes: up to 8x). With it: flat 1.5 s/step (jobs 5997785 / 5997786, 2026-11-15).
+    export CXI_FORK_SAFE=1 CXI_FORK_SAFE_HP=1
 fi
 export HF_HUB_OFFLINE=1
 export TRANSFORMERS_OFFLINE=1
