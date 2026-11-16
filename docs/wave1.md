@@ -29,7 +29,9 @@ They are already done, and their configs are included.
 - **RCCL fix** (`scripts/env_adastra.sh`): `CXI_FORK_SAFE=1 CXI_FORK_SAFE_HP=1`.
   - The DataLoader re-forks its workers every epoch, after RCCL has registered its memory with the Slingshot NIC.
     Every collective then slowed down.
-  - On 4 MI300 nodes, the step time went from 1.5 to 2.5 s after step ~500. With the fix, it stays at 1.5 s.
+  - Crop test on 4 MI300 nodes, 1000 steps: the mean step after step 400 went from 2.51 s without the fix to
+    1.91 s with it (median 2.47 → 1.52). Intermittent spikes remain: on about a third of the steps the all_reduce
+    takes ~0.4-0.5 s instead of 0.03 s (see the reference timings below).
 - **Tests**: `python -m tests.test_cpu fixed downsample`. The full suite (`python -m tests.test_cpu`) keeps the
   invariants of `docs/code.md`.
 
@@ -58,5 +60,30 @@ ACCOUNT=<project> bash scripts/launch_wave.sh \
 squeue -u $USER -o "%.9i %.34j %.8T %.10M %.20S" | grep -v -E "resume|eval_"
 ```
 
-Before the RCCL fix, a run cost ~56 MI300 h (8 epochs) or ~180 h (24 epochs), training and evaluation included.
-Expect roughly 35-40 % less with the fix.
+## Reference timings (2026-11-16, this branch, `model.conv_impl: gemm`, torch 2.5.1+rocm6.2)
+
+Measured with 1000-step runs (one end of epoch at step 605, i.e. one validation and one checkpoint) on exclusive
+MI300A nodes. Use the **mean** of `s_per_step` (logged every 10 steps in `metrics.jsonl`): it sets the wall time,
+and the median hides the spikes.
+
+| config | nodes | mean s/step, steps 20-400 → 400-1000 | volumes/s per APU | 8 epochs, wall | 8 epochs, GENCI h (train) |
+|---|---|---|---|---|---|
+| `mix192r_clip` | 4 | 1.96 → 2.13 | 3.78 | 3.0 h | 47 |
+| `mix192r_pillar11` | 4 | 2.13 → 2.48 | 3.26 | 3.4 h | 55 |
+| `mix192r_fixed_reg4` | 4 | 2.10 → 2.57 | 3.16 | 3.6 h | 57 |
+| `mix192r_clip` | 1 | 6.47 (300 steps) | 4.94 | 9.2 h | 37 |
+
+- Evaluation of a resized run: ~22 min on 1 node (~1.5 GENCI h). A 24-epoch run is 3× the training.
+- End of epoch (validation + checkpoint): ~1 min on 4 nodes. Start-up: ~40 s, mostly the first step.
+- Peak memory 16.0-16.4 GiB per APU. Data wait 0.03-0.04 s per step on 4 nodes, the same in slow steps.
+- **The multi-node inefficiency is the main target.** One node runs at 4.9 volumes/s per APU, 4 nodes at 3.2-3.8.
+  Slow steps (~1/3, up to 3-5 s) come with collectives that take 0.4-0.5 s (all_reduce) instead of 0.03 s.
+  The old runs without the fork-safety fix gave the same resized timings (`mix192r_clip`: 3.0 h, 48 h).
+
+To reproduce a reference run (no evaluation, nothing kept but the metrics):
+
+```bash
+sbatch --account=<project> --nodes=4 --constraint=MI300 --gpus-per-node=4 --ntasks-per-node=4 --cpus-per-task=48 \
+  --time=01:30:00 --export=ALL,REPO_DIR=$PWD,VENV_DIR=<venv>,CONFIG=configs/mix192r_clip.yaml,EXTRA_ARGS="--output-dir \
+  $SCRATCHDIR/bench192/clip_n4 --set training.stop_at_step=1000 training.ckpt_every=100000" scripts/submit_train.slurm
+```
