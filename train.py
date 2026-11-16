@@ -238,6 +238,8 @@ def main() -> None:
     for kv in args.set:
         k, v = kv.split("=", 1)
         set_by_dotted(cfg, k, v)
+    if os.environ.get("MCW_CUDNN_BENCHMARK") == "1":  # model.conv_impl native: MIOpen Find instead of immediate mode
+        torch.backends.cudnn.benchmark = True
     signal.signal(signal.SIGUSR1, _request_stop)     # before any DataLoader worker is forked
     rank, world, local = D.setup()
     device = torch.device("cuda", local) if torch.cuda.is_available() else torch.device("cpu")
