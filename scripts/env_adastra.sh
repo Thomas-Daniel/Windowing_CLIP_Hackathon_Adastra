@@ -28,10 +28,21 @@ if [ "${SLURM_JOB_NUM_NODES:-1}" -gt 1 ] && [ "${RCCL_OFI:-1}" = "1" ]; then
     if [ -n "$ROCM_SDK_LIB" ]; then
         module load aws-ofi-rccl/1.18.0_rocm_7
         export LD_LIBRARY_PATH="$ROCM_SDK_LIB:$LD_LIBRARY_PATH"
+        # libfabric's ROCr HMEM support dlopens "libhsa-runtime64.so" (unversioned). The wheel only has
+        # libhsa-runtime64.so.1, so libfabric loaded the system's ROCm 6 HSA runtime next to the wheel's: GPU memory
+        # registration then failed ("Bad address", cxil_map: write error). A shim directory with the unversioned name
+        # pointing to the wheel's library makes dlopen return the runtime already loaded.
+        if [ "${MCW_NO_HSA_SHIM:-0}" != "1" ]; then
+            SHIM="$VENV_DIR/rocm_shim"
+            [ -e "$SHIM/libhsa-runtime64.so" ] || { mkdir -p "$SHIM" && ln -sfn "$ROCM_SDK_LIB/libhsa-runtime64.so.1" "$SHIM/libhsa-runtime64.so"; }
+            export LD_LIBRARY_PATH="$SHIM:$LD_LIBRARY_PATH"
+        fi
     else
         module load aws-ofi-rccl/1.18.0_rocm6
     fi
     unset NCCL_NET_PLUGIN
+    # override of the module's NCCL_NET_GDR_LEVEL=3 (e.g. 0: no GPUDirect, staged through host memory)
+    [ -n "${MCW_NET_GDR_LEVEL:-}" ] && export NCCL_NET_GDR_LEVEL="$MCW_NET_GDR_LEVEL"
     # CXI fork safety: the DataLoader re-forks its workers every epoch, after RCCL has registered its memory with
     # the NIC; without this, every collective then slows down (4 MI300 nodes: 1.5 -> 2.5 s/step from step ~400-600,
     # all_reduce 0.04 -> 0.30 s; 32 nodes: up to 8x). With it, crop test: mean 1.91 instead of 2.51 s/step after step
