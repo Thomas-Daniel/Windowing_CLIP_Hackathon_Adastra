@@ -3,6 +3,7 @@
 # shellcheck disable=SC1091
 source "${VENV_DIR:?set VENV_DIR to the venv built by scripts/setup_env_adastra.sh}/bin/activate"
 export NCCL_SOCKET_IFNAME=hsn0,hsn1,hsn2,hsn3
+export NCCL_NET_GDR_LEVEL=3
 export HSA_FORCE_FINE_GRAIN_PCIE=1
 # XNACK off: with HSA_XNACK=1 torch's AOTriton flash / mem-efficient SDPA kernels are rejected
 # and attention silently falls back to the math backend (huge memory; concerto-ct job 5444076).
