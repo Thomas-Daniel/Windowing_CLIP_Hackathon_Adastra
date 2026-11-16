@@ -24,6 +24,9 @@ export NUMPY_MADVISE_HUGEPAGE=0
 ROCM_SDK_LIB=$(ls -d "$VENV_DIR"/lib/python3*/site-packages/_rocm_sdk_core/lib 2>/dev/null | head -n 1)
 if [ -n "$ROCM_SDK_LIB" ]; then
     export HSA_NO_SCRATCH_RECLAIM=1
+    # hipBLASLt in this stack spends ~25 ms of host CPU per matmul (Atlas fwd+bwd at 192^3, batch 4: 15.6 s, of which
+    # 0.25 s on the GPU; profile job 6010200). rocBLAS: 0.54 s, as torch 2.5.1 (0.50 s).
+    export TORCH_BLAS_PREFER_HIPBLASLT=0
 fi
 if [ "${SLURM_JOB_NUM_NODES:-1}" -gt 1 ] && [ "${RCCL_OFI:-1}" = "1" ]; then
     if [ -n "$ROCM_SDK_LIB" ]; then
