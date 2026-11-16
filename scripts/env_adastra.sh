@@ -16,8 +16,21 @@ export NUMPY_MADVISE_HUGEPAGE=0
 # The module sets NCCL_NET_PLUGIN=librccl-net.so, which the RCCL bundled with torch 2.5.1 turns into
 # "librccl-net-librccl-net.so.so"; unset, it loads librccl-net.so from LD_LIBRARY_PATH.
 # Measured: 2 MI250X nodes scale x1.99 even over sockets (one ~370 MB all-reduce per ~30 s step).
+# ROCm 7+ wheels (torch 2.14.0+rocm10.1.0 from repo.amd.com: HIP 7.16, libraries in site-packages/_rocm_sdk_core/lib):
+# the rocm6 plugin needs libamdhip64.so.6, fails to load, and RCCL falls back to TCP sockets (45 s/step on 4 MI300
+# nodes, 2026-11-16). Use the rocm_7 plugin, let it find the wheel's libamdhip64.so.7, and set the variable the new
+# RCCL asks for ("HSA_NO_SCRATCH_RECLAIM=1 must be set to avoid performance degradation").
+ROCM_SDK_LIB=$(ls -d "$VENV_DIR"/lib/python3*/site-packages/_rocm_sdk_core/lib 2>/dev/null | head -n 1)
+if [ -n "$ROCM_SDK_LIB" ]; then
+    export HSA_NO_SCRATCH_RECLAIM=1
+fi
 if [ "${SLURM_JOB_NUM_NODES:-1}" -gt 1 ] && [ "${RCCL_OFI:-1}" = "1" ]; then
-    module load aws-ofi-rccl/1.18.0_rocm6
+    if [ -n "$ROCM_SDK_LIB" ]; then
+        module load aws-ofi-rccl/1.18.0_rocm_7
+        export LD_LIBRARY_PATH="$ROCM_SDK_LIB:$LD_LIBRARY_PATH"
+    else
+        module load aws-ofi-rccl/1.18.0_rocm6
+    fi
     unset NCCL_NET_PLUGIN
     # CXI fork safety: the DataLoader re-forks its workers every epoch, after RCCL has registered its memory with
     # the NIC; without this, every collective then slows down (4 MI300 nodes: 1.5 -> 2.5 s/step from step ~400-600,
