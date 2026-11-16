@@ -90,12 +90,16 @@ class AtlasBackbone(nn.Module):
         self.out_dim = c["atlas_args"]["dim"] * len(c["stages"])
         if conv_impl == "gemm":            # MIOpen's 3D convs are unusably slow on MI250X (mcw/gemm_conv3d.py)
             swap_conv3d(self.atlas)
+        elif conv_impl == "triton":        # prototype: implicit GEMM, no column buffer (mcw/triton_conv3d.py)
+            from .triton_conv3d import swap_conv3d_triton
+            swap_conv3d_triton(self.atlas)
+        elif conv_impl != "native":
+            raise ValueError(f"model.conv_impl must be gemm | triton | native, got {conv_impl!r}")
+        if conv_impl in ("gemm", "triton"):
             # run the whole conv stem in channels_last_3d (GemmConv3d, BatchNorm, LayerNorm3d and
             # the activations all keep it), back to NCDHW for the token stages
             stem = self.atlas.patch_embeds[MODALITY]
             stem.forward = types.MethodType(_stem_forward_channels_last, stem)
-        elif conv_impl != "native":
-            raise ValueError(f"model.conv_impl must be gemm | native, got {conv_impl!r}")
         if grad_checkpointing:
             for m in self.atlas.modules():
                 if isinstance(m, (ConvBlock3D, MultiScaleAttentionBlock)):
