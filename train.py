@@ -23,6 +23,11 @@ the exact same run. On resume, metrics.jsonl records after the checkpoint step (
 after a crash) move to metrics_dropped.jsonl, and a {"type": "resume"} record is added.
 Resubmitting the same command resumes; a finished run exits at once.
 
+Profiling (training.profile=true, off by default): at every log step, a "prof" log line and a
+{"type": "profile"} record in metrics.jsonl with the time of each phase of a step (max / min over
+ranks, slowest rank) and the node memory pressure (free memory, page cache, reclaim counters).
+See StepProfiler.
+
 Usage (one GPU per process, see scripts/submit_train.slurm):
     python train.py --config configs/win2_pillar11.yaml [--set training.epochs=2 ...]
 """
@@ -40,6 +45,10 @@ from pathlib import Path
 
 import numpy as np
 import torch
+import torch.distributed as dist
+
+torch.backends.cuda.preferred_blas_library("cublas")
+torch.backends.cudnn.benchmark = True
 
 from mcw import dist as D
 from mcw.config import load_config, set_by_dotted
@@ -53,6 +62,112 @@ from mcw.windowing_arms import param_groups
 def log(msg: str) -> None:
     if D.rank() == 0:
         print(f"[{time.strftime('%H:%M:%S')}] {msg}", flush=True)
+
+
+# ---------------------------------------------------------------------------
+# Profiling (training.profile=true)
+# ---------------------------------------------------------------------------
+PROFILE_PHASES = ("data", "h2d_aug", "fwd_nograd", "loss", "fwd_bwd", "allreduce", "optim", "misc")
+VM_KEYS = ("pgscan_direct", "pgscan_kswapd", "allocstall", "compact_stall")
+
+
+def _read_proc(path: str) -> dict[str, int]:
+    """/proc/meminfo ("MemFree:  123 kB") or /proc/vmstat ("pgscan_direct 123") -> {key: int}."""
+    out = {}
+    try:
+        with open(path) as f:
+            for line in f:
+                parts = line.split()
+                if len(parts) >= 2:
+                    out[parts[0].rstrip(":")] = int(parts[1])
+    except (OSError, ValueError):
+        pass
+    return out
+
+
+def _vm_counters() -> list[float]:
+    vm = _read_proc("/proc/vmstat")
+    return [float(vm.get("pgscan_direct", 0)), float(vm.get("pgscan_kswapd", 0)),
+            float(sum(v for k, v in vm.items() if k.startswith("allocstall"))),    # allocstall_{dma,normal,movable,...}
+            float(vm.get("compact_stall", 0))]
+
+
+class StepProfiler:
+    """Time of each phase of a training step, the GPU synchronised at every phase boundary (a few
+    ms per step), averaged over the log window on each rank, then gathered over ranks:
+      data        wait for the DataLoader            h2d_aug     host -> GPU copy + rotation
+      fwd_nograd  (1) forwards without grad           loss        (2) global InfoNCE + backward to the features
+      fwd_bwd     (3) re-forwards + backwards         allreduce   gradient all-reduce
+      optim       clip, AdamW, idx_sum                misc        logging, stop check, val / ckpt
+    A rank waiting for a slower one has a large 'allreduce': compare its max and min over ranks.
+    Node memory over the window (ranks of one node see the same values; max / min over nodes):
+    free memory and page cache (/proc/meminfo, GB), and the increase of the /proc/vmstat reclaim
+    counters: pgscan_direct / allocstall / compact_stall > 0 = processes held up to free memory."""
+
+    def __init__(self, enabled: bool, device: torch.device):
+        self.on, self.device = enabled, device
+        self.sums = dict.fromkeys(PROFILE_PHASES, 0.0)
+        self.n, self.t = 0, 0.0
+        self.vm_prev = _vm_counters() if enabled else None
+
+    def _sync(self) -> None:
+        if self.device.type == "cuda":
+            torch.cuda.synchronize(self.device)
+
+    def start(self, data_wait: float) -> None:
+        if self.on:
+            self.sums["data"] += data_wait
+            self._sync()
+            self.t = time.perf_counter()
+
+    def mark(self, phase: str, end_of_step: bool = False) -> None:
+        if self.on:
+            self._sync()
+            now = time.perf_counter()
+            self.sums[phase] += now - self.t
+            self.t = now
+            self.n += end_of_step
+
+    def report(self, step: int) -> dict | None:
+        """Collective: call on every rank (log steps are the same on every rank)."""
+        if not self.on or self.n == 0:
+            return None
+        mem = _read_proc("/proc/meminfo")
+        vm = _vm_counters()
+        dvm = [a - b for a, b in zip(vm, self.vm_prev)]
+        self.vm_prev = vm
+        phases = [self.sums[p] / self.n for p in PROFILE_PHASES]
+        local = torch.tensor(phases + [sum(phases), mem.get("MemFree", 0) / 2**20, mem.get("Cached", 0) / 2**20] + dvm,
+                             dtype=torch.float64, device=self.device)
+        if dist.is_available() and dist.is_initialized() and dist.get_world_size() > 1:
+            parts = [torch.empty_like(local) for _ in range(dist.get_world_size())]
+            dist.all_gather(parts, local)
+            allv = torch.stack(parts).cpu()
+        else:
+            allv = local.cpu()[None]
+        self.sums, self.n = dict.fromkeys(PROFILE_PHASES, 0.0), 0
+
+        rec = {"type": "profile", "step": step, "n_ranks": int(allv.shape[0])}
+        names = (*PROFILE_PHASES, "step")
+        for k, name in enumerate(names):
+            col = allv[:, k]
+            rec |= {f"t_{name}_max": float(col.max()), f"t_{name}_min": float(col.min()),
+                    f"t_{name}_argmax": int(col.argmax())}
+        rec["t_step_per_rank"] = [round(float(x), 3) for x in allv[:, len(names) - 1]]
+        rec["t_allreduce_per_rank"] = [round(float(x), 3) for x in allv[:, PROFILE_PHASES.index("allreduce")]]
+        j = len(names)
+        rec["node_free_gb_min"] = float(allv[:, j].min())
+        rec["node_cache_gb_max"] = float(allv[:, j + 1].max())
+        for i, key in enumerate(VM_KEYS):
+            rec[f"{key}_max"] = float(allv[:, j + 2 + i].max())
+        return rec
+
+
+def profile_line(rec: dict) -> str:
+    ph = " ".join(f"{p}={rec[f't_{p}_max']:.3f}/{rec[f't_{p}_min']:.3f}(r{rec[f't_{p}_argmax']})"
+                  for p in (*PROFILE_PHASES, "step"))
+    return (f"prof [s/step max/min(slowest rank)] {ph} | node free_gb_min={rec['node_free_gb_min']:.0f} "
+            f"cache_gb_max={rec['node_cache_gb_max']:.0f} " + " ".join(f"{k}={rec[k + '_max']:.0f}" for k in VM_KEYS))
 
 
 def lr_at(step: int, base_lr: float, warmup: int, total: int) -> float:
@@ -333,6 +448,10 @@ def main() -> None:
             emit({"type": "win_init", "step": 0, "win_curves": window_curves(model), "win_bounds": window_bounds(model)})
     wcfg = cfg["windowing"]
 
+    prof = StepProfiler(str(t.get("profile", False)).lower() in ("1", "true", "yes"), device)
+    if prof.on:
+        log("profiling on: GPU synchronised at every phase boundary; 'prof' line and profile record at every log step")
+
     aug = cfg["augment"]
     model.train()
     t_last, data_wait, acc_n = time.time(), 0.0, 0
@@ -345,7 +464,9 @@ def main() -> None:
         loader = torch.utils.data.DataLoader(train_ds, batch_size=local_batch, sampler=sampler, drop_last=True, **loader_kw)
         t_wait = time.time()
         for batch in loader:
-            data_wait += time.time() - t_wait
+            wait = time.time() - t_wait
+            data_wait += wait
+            prof.start(wait)
             for g in opt.param_groups:
                 g["lr"] = lr_at(step, cfg["optim"]["lr"], cfg["optim"]["warmup_steps"], total_steps) * g["lr_mult"]
 
@@ -362,6 +483,7 @@ def main() -> None:
                      for j in range(accum)]
             del hu
             txt_emb = batch["text"].to(device, non_blocking=True)
+            prof.mark("h2d_aug")
 
             # ---- (1) features without grad, (2) global loss -> feature gradients
             with torch.no_grad():
@@ -370,20 +492,24 @@ def main() -> None:
                     model.set_shuffle_seed(shuffle_seed(j))
                     feats.append(model.encode_image(x.float()))
                 feats = torch.cat(feats)
+            prof.mark("fwd_nograd")
             feats.requires_grad_(True)
             loss, st = clip_loss(feats, model.encode_text(txt_emb), model.scale())
             loss.backward()
             fgrad = feats.grad
+            prof.mark("loss")
             # ---- (3) re-forward each micro-batch with grad, inject the cached feature gradient
             for j, x in enumerate(micro):
                 model.set_shuffle_seed(shuffle_seed(j))
                 model.encode_image(x.float()).backward(fgrad[j * mb:(j + 1) * mb])
             model.set_shuffle_seed(None)
             del micro, feats, fgrad
+            prof.mark("fwd_bwd")
 
             D.all_reduce_grads(params)
             if model.logit_scale.grad is not None:
                 model.logit_scale.grad /= world
+            prof.mark("allreduce")
             gnorm = torch.nn.utils.clip_grad_norm_(params, t["grad_clip"] if t.get("grad_clip") else float("inf"))
             finite = bool(torch.isfinite(gnorm)) and bool(torch.isfinite(loss))   # same on every rank
             if finite:
@@ -398,6 +524,7 @@ def main() -> None:
             opt.zero_grad(set_to_none=True)
             step += 1
             idx_sum = D.sum_int(int(batch["idx"].sum()), device)      # fingerprint of the step's samples
+            prof.mark("optim", end_of_step=True)
 
             if finite:
                 for k, v in {"loss": loss.detach(), "gnorm": gnorm, **st}.items():
@@ -415,6 +542,10 @@ def main() -> None:
                        **ws}
                 log(" ".join(f"{k}={v:.4g}" if isinstance(v, float) else f"{k}={v}" for k, v in rec.items()))
                 emit(rec)
+                prec = prof.report(step)                     # collective: every rank
+                if prec is not None:
+                    log(profile_line(prec))
+                    emit(prec)
                 if lw is not None and t.get("track_every") and step % t["track_every"] == 0:
                     emit({"type": "win_curves", "step": step, "win_curves": window_curves(model)})
                 # learning check: the curves (or the per-patch windows) must have moved by `check_at_step`
@@ -466,6 +597,7 @@ def main() -> None:
                 break
             if step >= stop_at:
                 break
+            prof.mark("misc")
             t_wait = time.time()
 
     if rank == 0 and step >= total_steps:

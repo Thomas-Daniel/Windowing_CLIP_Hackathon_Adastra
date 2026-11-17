@@ -1,0 +1,5 @@
+# mix192 reference, 1 channel: the [-1000, 1000] ramp (as mix_clip).
+base: mix192_base.yaml
+run_name: mix192_clip2
+windowing:
+  arm: clip

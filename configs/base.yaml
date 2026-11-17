@@ -2,12 +2,12 @@
 # override ONLY `run_name` and the `windowing:` block: data, backbone size, CLIP batch,
 # number of steps, optimiser, augmentation and seed (hence data order) are identical.
 run_name: base
-output_root: ${SCRATCHDIR}/merlin_clip_runs
+output_root: /lus/scratch/CT3/cad17796/thdaniel/merlin_clip_runs
 seed: 0
 
 data:
-  manifest: ${SCRATCHDIR}/merlin_clip_data/manifest_384.csv        # scripts/preprocess_volumes.py
-  text_emb_dir: ${SCRATCHDIR}/merlin_clip_data/text_emb/qwen3_emb_8b  # scripts/embed_reports.py
+  manifest: /lus/scratch/CT3/cad17796/thdaniel/merlin_clip_data/manifest_384.csv        # scripts/preprocess_volumes.py
+  text_emb_dir: /lus/scratch/CT3/cad17796/thdaniel/merlin_clip_data/text_emb/qwen3_emb_8b  # scripts/embed_reports.py
   text_pooling: last          # last (official Qwen3-Embedding pooling) | mean (pillar-pretrain cache)
   train_splits: [train]       # Merlin official split
   val_splits: [val]
@@ -20,7 +20,7 @@ model:
   max_logit_scale: 100
   precision: bf16
   grad_checkpointing: false
-  conv_impl: gemm             # gemm (mcw/gemm_conv3d.py) | native (MIOpen: minutes per 3D conv on MI250X)
+  conv_impl: native             # gemm (mcw/gemm_conv3d.py) | native (MIOpen: minutes per 3D conv on MI250X)
 
 windowing:                    # mcw/windowing_arms.py (input clamped to [-1000, 1000] HU for every arm)
   arm: null                   # clip | pillar11 | learned | local | local_shuf | dense, set by each run config
@@ -32,7 +32,7 @@ windowing:                    # mcw/windowing_arms.py (input clamped to [-1000, 
   gate_lr: null               # local arms: LR of the gate network; null = window_lr
   warp: false                 # learned / local: per-channel learned HU shift + width factor before the curves
   # patch arms (mcw/patch_windows.py): per-patch windows from the patch HU density, no presets
-  hu_hist: ${SCRATCHDIR}/merlin_clip_data/hu_hist_80.npz   # data-driven init (scripts/hu_histogram.py)
+  hu_hist: /lus/scratch/CT3/cad17796/thdaniel/merlin_clip_data/hu_hist_80.npz   # data-driven init (scripts/hu_histogram.py)
   density_context: 3          # density of the patch + its 26 neighbours (3 = 27 mm cube); 1 = patch only
   hidden: 64                  # width of the per-patch 1x1x1 network
   check_at_step: 300          # learned arms: alert if the curves moved less than min_curve_drift by then
@@ -68,6 +68,6 @@ training:
   eval_batch: 2
 
 eval:
-  prompts: ${SCRATCHDIR}/merlin_clip_data/text_emb/qwen3_emb_8b/prompts.npz
+  prompts: /lus/scratch/CT3/cad17796/thdaniel/merlin_clip_data/text_emb/qwen3_emb_8b/prompts.npz
   findings_csv: /lus/work/CT3/cad17796/SHARED/merlinabdominalctdataset/zero_shot_findings_disease_cls.csv
   five_year_csv: /lus/work/CT3/cad17796/SHARED/merlinabdominalctdataset/five_years_disease_task.csv
