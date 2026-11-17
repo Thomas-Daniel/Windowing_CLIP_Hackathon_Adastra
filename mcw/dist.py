@@ -8,6 +8,9 @@ import torch
 import torch.distributed as dist
 from torch._utils import _flatten_dense_tensors, _unflatten_dense_tensors
 
+# mcw.commcheck.CommCheck when MCW_COMM_CHECK=1 (set by train.py): every collective below is verified over gloo
+CHECK = None
+
 
 def setup() -> tuple[int, int, int]:
     rank, world, local = (int(os.environ.get(k, d)) for k, d in (("RANK", 0), ("WORLD_SIZE", 1), ("LOCAL_RANK", 0)))
@@ -39,6 +42,8 @@ def gather_cat(x: torch.Tensor) -> torch.Tensor:
         return x
     out = [torch.empty_like(x) for _ in range(world_size())]
     dist.all_gather(out, x.contiguous())
+    if CHECK is not None:
+        CHECK.gather(x, out, "gather_cat")
     return torch.cat(out)
 
 
@@ -48,6 +53,8 @@ def gather_with_local_grad(x: torch.Tensor) -> torch.Tensor:
         return x
     parts = [torch.empty_like(x) for _ in range(world_size())]
     dist.all_gather(parts, x.detach().contiguous())
+    if CHECK is not None:
+        CHECK.gather(x, parts, "loss_features")
     parts[rank()] = x
     return torch.cat(parts)
 
@@ -63,7 +70,10 @@ def all_reduce_grads(params) -> None:
             by_dtype.setdefault(p.grad.dtype, []).append(p.grad)
     for grads in by_dtype.values():                    # same order on every rank (parameter order)
         flat = _flatten_dense_tensors(grads)
+        pre = CHECK.grad_pre(flat) if CHECK is not None else None
         dist.all_reduce(flat)                          # SUM, as before: train.py divides only logit_scale
+        if CHECK is not None:
+            CHECK.grad_post(flat, pre)
         for g, f in zip(grads, _unflatten_dense_tensors(flat, grads)):
             g.copy_(f)
 
@@ -91,6 +101,9 @@ def average_buffers(module: torch.nn.Module) -> None:
     statistics come from its own micro-batches, so sync them before eval / checkpointing."""
     if not is_dist():
         return
+    if CHECK is not None:
+        CHECK.average_buffers(module)                  # the same loop, verified (mcw/commcheck.py)
+        return
     for b in module.buffers():
         if b.is_floating_point():
             dist.all_reduce(b)
@@ -102,7 +115,10 @@ def any_true(flag: bool, device) -> bool:
     if not is_dist():
         return flag
     t = torch.tensor([1 if flag else 0], device=device, dtype=torch.int32)
+    local = t.clone() if CHECK is not None else None
     dist.all_reduce(t, op=dist.ReduceOp.MAX)
+    if CHECK is not None:
+        t = CHECK.scalar(t, local, dist.ReduceOp.MAX, "any_true")
     return bool(t.item())
 
 
@@ -111,5 +127,8 @@ def sum_int(x: int, device) -> int:
     if not is_dist():
         return int(x)
     t = torch.tensor([int(x)], device=device, dtype=torch.int64)
+    local = t.clone() if CHECK is not None else None
     dist.all_reduce(t)
+    if CHECK is not None:
+        t = CHECK.scalar(t, local, dist.ReduceOp.SUM, "sum_int")
     return int(t.item())

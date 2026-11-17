@@ -31,16 +31,21 @@ set -eu
 REPO_DIR="${REPO_DIR:?}"; CONFIG="${CONFIG:?set CONFIG to configs/win*.yaml}"
 cd "$REPO_DIR"
 
-source .venv/bin/activate
+if [ -n "${VENV_DIR:-}" ]; then
+    # the runtime of the 2026-11-16 runs: RCCL libfabric plugin (rocm_7) + HSA shim, CXI fork safety, rocBLAS
+    source scripts/env_adastra.sh
+else
+    source .venv/bin/activate
 
-export OMP_NUM_THREADS=24
+    export OMP_NUM_THREADS=24
 
-export MIOPEN_USER_DB_PATH="/tmp/miopen-${USER}-${SLURM_JOB_ID}"
-export MIOPEN_CUSTOM_CACHE_DIR="${MIOPEN_USER_DB_PATH}"
-mkdir -p "${MIOPEN_USER_DB_PATH}"
+    export MIOPEN_USER_DB_PATH="/tmp/miopen-${USER}-${SLURM_JOB_ID}"
+    export MIOPEN_CUSTOM_CACHE_DIR="${MIOPEN_USER_DB_PATH}"
+    mkdir -p "${MIOPEN_USER_DB_PATH}"
 
-export NCCL_SOCKET_IFNAME=hsn0,hsn1,hsn2,hsn3
-export NCCL_NET_GDR_LEVEL=3
+    export NCCL_SOCKET_IFNAME=hsn0,hsn1,hsn2,hsn3
+    export NCCL_NET_GDR_LEVEL=3
+fi
 
 echo "Job ${SLURM_JOB_ID} on ${SLURM_JOB_NODELIST} started $(date -R): $CONFIG ${EXTRA_ARGS:-}"
 MONITOR_LOG="logs/gpu_monitor_${SLURM_JOB_ID}.log"

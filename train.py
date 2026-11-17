@@ -363,6 +363,11 @@ def main() -> None:
         out_dir.mkdir(parents=True, exist_ok=True)
         (out_dir / "config_resolved.json").write_text(json.dumps(cfg, indent=2))
     D.barrier()
+    if os.environ.get("MCW_COMM_CHECK") == "1" and world > 1:   # every collective verified over gloo + stress bursts
+        from mcw.commcheck import CommCheck
+        D.CHECK = CommCheck(rank, world, device, out_dir, stress_every=int(os.environ.get("MCW_COMM_STRESS_EVERY", 100)))
+        log("commcheck on (mcw/commcheck.py): collectives verified over gloo, errors logged and repaired; "
+            f"stress bursts every {D.CHECK.stress_every} steps and at each epoch end")
 
     mb = t["micro_batch"]
     accum = t.get("accum_steps") or t["global_batch"] // (world * mb)     # null = fill the global batch
@@ -463,8 +468,12 @@ def main() -> None:
         sampler.set_epoch(epoch, in_epoch)
         train_ds.crop_epoch = epoch                      # forked into this epoch's workers
         loader = torch.utils.data.DataLoader(train_ds, batch_size=local_batch, sampler=sampler, drop_last=True, **loader_kw)
+        if D.CHECK is not None:
+            D.CHECK.on_new_loader(epoch)                 # workers are forked when the loop starts
         t_wait = time.time()
         for batch in loader:
+            if D.CHECK is not None:
+                D.CHECK.step = step + 1                  # the step being computed (logged numbering)
             wait = time.time() - t_wait
             data_wait += wait
             prof.start(wait)
@@ -590,6 +599,10 @@ def main() -> None:
                         save_ckpt(out_dir / f"ckpt_epoch{step // steps_per_epoch:03d}.pt", model, opt, step,
                                   step // steps_per_epoch, cfg)
                 D.barrier()
+            if D.CHECK is not None:                          # after the real average_buffers, not before
+                if step % D.CHECK.stress_every == 0 or end_of_epoch:
+                    D.CHECK.stress(model)
+                D.CHECK.summary()
             if stop_req:
                 log(f"stop requested (signal) at step {step}: checkpoint saved, exiting; "
                     f"resubmit the same command to resume")
