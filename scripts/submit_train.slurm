@@ -14,14 +14,14 @@
 # Optional: EXTRA_ARGS="--set training.stop_at_step=200"
 #==============================================================================
 #SBATCH --job-name=mcw_train
-#SBATCH --nodes=1
-#SBATCH --ntasks-per-node=8
-#SBATCH --gpus-per-node=8
-#SBATCH --cpus-per-task=16
+#SBATCH --nodes=4
+#SBATCH --ntasks-per-node=4
+#SBATCH --gpus-per-node=4
+#SBATCH --cpus-per-task=24
 #SBATCH --mem=0
 #SBATCH --time=24:00:00
 #SBATCH --exclusive
-#SBATCH --constraint=MI250
+#SBATCH --constraint=MI300
 #SBATCH --output=logs/%x-%j.out
 #SBATCH --error=logs/%x-%j.out
 #SBATCH --export=ALL
@@ -30,7 +30,19 @@
 set -eu
 REPO_DIR="${REPO_DIR:?}"; CONFIG="${CONFIG:?set CONFIG to configs/win*.yaml}"
 cd "$REPO_DIR"
-source scripts/env_adastra.sh
+
+source .venv/bin/activate
+
+export MIOPEN_FIND_MODE=1
+export OMP_NUM_THREADS=24
+
+export MIOPEN_USER_DB_PATH="/tmp/miopen-${USER}-${SLURM_JOB_ID}"
+export MIOPEN_CUSTOM_CACHE_DIR="${MIOPEN_USER_DB_PATH}"
+mkdir -p "${MIOPEN_USER_DB_PATH}"
+
+export NCCL_SOCKET_IFNAME=hsn0,hsn1,hsn2,hsn3
+export NCCL_NET_GDR_LEVEL=3
+
 echo "Job ${SLURM_JOB_ID} on ${SLURM_JOB_NODELIST} started $(date -R): $CONFIG ${EXTRA_ARGS:-}"
 MONITOR_LOG="logs/gpu_monitor_${SLURM_JOB_ID}.log"
 srun --overlap --ntasks=1 --cpu-bind=none --mem-bind=none \
@@ -40,5 +52,5 @@ MONITOR_PID=$!
 trap 'kill "$MONITOR_PID" 2>/dev/null || true' EXIT
 # shellcheck disable=SC2086
 srun --cpu-bind=none --mem-bind=none -- bash scripts/adastra_bind.sh \
-    python -u train.py --config "$CONFIG" ${EXTRA_ARGS:-}
+    python -u train.py --config "$CONFIG" ${EXTRA_ARGS:-} --set training.profile=true
 echo "Job ${SLURM_JOB_ID} ended $(date -R)"

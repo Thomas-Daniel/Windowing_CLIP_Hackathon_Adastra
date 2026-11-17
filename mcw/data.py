@@ -4,16 +4,40 @@ Volumes are the 384^3 int16 HU exports of scripts/preprocess_volumes.py, report 
 the (N, D) float16 matrix of scripts/embed_reports.py (rows in ids.txt order). Augmentation
 runs on the GPU on raw HU, before the windowing, so all windowing arms see the same
 augmented volumes.
+
+Page cache: the volumes (113 MB each, several TB in all) are far larger than the 512 GB of
+MI300A memory shared by CPU and GPU, so a volume is never still cached when it is read again
+next epoch, yet reading fills that memory with page cache. Each volume file is dropped from
+the cache right after it is read (posix_fadvise DONTNEED). RADIO_DROP_PAGE_CACHE=0 disables it
+(A/B). The embedding matrix is small and re-read every batch: it stays cached.
 """
 from __future__ import annotations
 
 import math
+import os
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import torch
 import torch.nn.functional as F
+
+
+DROP_PAGE_CACHE = 1
+
+
+def _drop_page_cache(path: str) -> None:
+    """Drop the whole file from the page cache (no-op if disabled or not supported)."""
+    if not DROP_PAGE_CACHE:
+        return
+    try:
+        fd = os.open(path, os.O_RDONLY)
+        try:
+            os.posix_fadvise(fd, 0, 0, os.POSIX_FADV_DONTNEED)
+        finally:
+            os.close(fd)
+    except (AttributeError, OSError):          # not supported: keep the default behaviour
+        pass
 
 
 class TextEmbeddings:
@@ -37,7 +61,8 @@ class MerlinClipDataset(torch.utils.data.Dataset):
     body stays in view), drawn from (crop_seed, crop_epoch, index): set ``crop_epoch`` before each epoch's
     DataLoader (workers are re-forked every epoch) and the crops do not depend on the GPU layout.
     ``downsample`` f (instead of ``crop``): the whole volume resized to (384 / f)^3 by averaging f^3 blocks of HU
-    (= trilinear resize by an integer factor), rounded to int16: the full field of view at f x 1.5 mm."""
+    (= trilinear resize by an integer factor), rounded to int16: the full field of view at f x 1.5 mm.
+    Every volume file is dropped from the page cache once read (see the module docstring)."""
 
     def __init__(self, manifest: str, texts: TextEmbeddings, splits: list[str],
                  max_items: int | None = None, seed: int = 0, keep_ids: set | None = None,
@@ -72,15 +97,18 @@ class MerlinClipDataset(torch.utils.data.Dataset):
         return s
 
     def __getitem__(self, i: int) -> dict:
+        path = self.paths[i]
         if self.crop:
-            v = np.load(self.paths[i], mmap_mode="r")
+            v = np.load(path, mmap_mode="r")
             z, y, x = self.crop_start(v.shape, i)
             c = self.crop
             vol = torch.from_numpy(np.ascontiguousarray(v[z:z + c, y:y + c, x:x + c]))
+            del v                       # close the map first: the kernel does not drop mapped pages
         elif self.downsample:
-            vol = torch.from_numpy(block_mean_int16(np.load(self.paths[i]), self.downsample))
+            vol = torch.from_numpy(block_mean_int16(np.load(path), self.downsample))
         else:
-            vol = torch.from_numpy(np.load(self.paths[i]))         # (D, H, W) int16 HU
+            vol = torch.from_numpy(np.load(path))                   # (D, H, W) int16 HU
+        _drop_page_cache(path)
         return {"idx": i, "study_id": self.ids[i], "volume": vol[None],
                 "text": torch.from_numpy(self.texts[self.ids[i]])}
 
