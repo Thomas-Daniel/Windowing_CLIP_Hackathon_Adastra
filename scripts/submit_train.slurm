@@ -33,7 +33,6 @@ cd "$REPO_DIR"
 
 source .venv/bin/activate
 
-export MIOPEN_FIND_MODE=1
 export OMP_NUM_THREADS=24
 
 export MIOPEN_USER_DB_PATH="/tmp/miopen-${USER}-${SLURM_JOB_ID}"

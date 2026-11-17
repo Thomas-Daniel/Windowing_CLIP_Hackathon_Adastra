@@ -48,7 +48,6 @@ import torch
 import torch.distributed as dist
 
 torch.backends.cuda.preferred_blas_library("cublas")
-torch.backends.cudnn.benchmark = True
 
 from mcw import dist as D
 from mcw.config import load_config, set_by_dotted

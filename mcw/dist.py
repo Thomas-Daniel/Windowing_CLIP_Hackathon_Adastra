@@ -6,6 +6,7 @@ import os
 
 import torch
 import torch.distributed as dist
+from torch._utils import _flatten_dense_tensors, _unflatten_dense_tensors
 
 
 def setup() -> tuple[int, int, int]:
@@ -51,17 +52,20 @@ def gather_with_local_grad(x: torch.Tensor) -> torch.Tensor:
     return torch.cat(parts)
 
 
-def all_reduce_grads(params: list[torch.nn.Parameter]) -> None:
-    """Sum gradients over ranks (one flat buffer)."""
-    if not is_dist():
+def all_reduce_grads(params) -> None:
+    """Sum the gradients over ranks: one all-reduce per dtype on a flat buffer instead of one per
+    tensor. Params whose .grad is None are skipped (same set on every rank: same model, same graph)."""
+    if not (dist.is_available() and dist.is_initialized()) or dist.get_world_size() == 1:
         return
-    grads = [p.grad for p in params if p.grad is not None]
-    if not grads:
-        return
-    flat = torch._utils._flatten_dense_tensors(grads)
-    dist.all_reduce(flat)
-    for g, s in zip(grads, torch._utils._unflatten_dense_tensors(flat, grads)):
-        g.copy_(s)
+    by_dtype: dict[torch.dtype, list[torch.Tensor]] = {}
+    for p in params:
+        if p.grad is not None:
+            by_dtype.setdefault(p.grad.dtype, []).append(p.grad)
+    for grads in by_dtype.values():                    # same order on every rank (parameter order)
+        flat = _flatten_dense_tensors(grads)
+        dist.all_reduce(flat)                          # SUM, as before: train.py divides only logit_scale
+        for g, f in zip(grads, _unflatten_dense_tensors(flat, grads)):
+            g.copy_(f)
 
 
 def all_reduce_mean(x: torch.Tensor) -> torch.Tensor:

@@ -1,0 +1,35 @@
+nodes=a[1069,1081] hsn=hsn0,hsn1,hsn2,hsn3 NCCL_NET=auto
+==== RCCL network plugins found (LD_LIBRARY_PATH, venv)
+world=8 (2 nodes x 4) host0=a1069 all_reduce correct=False
+    size  intra-node GB/s  all ranks GB/s  all ranks ms
+     1MB             16.2             2.4          0.76
+    16MB            147.9             5.3          5.52
+   256MB            221.1             4.4        105.66
+  1024MB            223.7             3.6        523.32
+/lus/scratch/BCINES/dci/salaun/minerva.hackathon/Windowing_CLIP_Hackathon_Adastra/.venv/lib/python3.12/site-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.
+  return func(*args, **kwargs)
+all_reduce result wrong
+all_reduce result wrong
+all_reduce result wrong
+all_reduce result wrong
+all_reduce result wrong
+all_reduce result wrong
+all_reduce result wrong
+all_reduce result wrong
+srun: error: a1081: tasks 4-5,7: Exited with exit code 1
+srun: Terminating StepId=6016346.0
+slurmstepd: error: *** STEP 6016346.0 ON a1069 CANCELLED AT 2026-11-17T10:44:02 ***
+srun: error: a1081: task 6: Exited with exit code 1
+srun: error: a1069: tasks 0-3: Terminated
+srun: Force Terminated StepId=6016346.0
+ 
+
+-----------------------------------------------------------
+
+
+
+CINES Job Report:
+ 
+----------------- 
+
+ 

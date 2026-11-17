@@ -20,7 +20,7 @@ model:
   max_logit_scale: 100
   precision: bf16
   grad_checkpointing: false
-  conv_impl: native           # how every Conv3d (Atlas stem + windowing arm) is computed (docs/wave1.md):
+  conv_impl: triton           # how every Conv3d (Atlas stem + windowing arm) is computed (docs/wave1.md):
                               #   native: MIOpen F.conv3d. Needs a recent ROCm: fails with torch 2.5.1+rocm6.2 and
                               #           2.14.1+rocm7.2, works with 2.15.0+rocm7.14 and 2.14.0+rocm10.1.0. MIOpen Find
                               #           (MCW_CUDNN_BENCHMARK=1, set by scripts/launch_wave.sh) picks faster kernels.

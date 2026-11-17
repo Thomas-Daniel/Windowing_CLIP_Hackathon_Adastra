@@ -1,0 +1,794 @@
+a1081:213927:213927 [2] NCCL INFO ncclOsDlopen(libnccl-env.so) failed: libnccl-env.so: cannot open shared object file: No such file or directory
+a1081:213927:213927 [2] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a1081:213927:213927 [2] NCCL INFO ROCr version 1.21
+a1081:213927:213927 [2] NCCL INFO cuMem auto-enable is limited to gfx1250 (detected gfx942); set NCCL_CUMEM_ENABLE=1 to override
+a1081:213927:213927 [2] NCCL INFO CONFIG_DMABUF_MOVE_NOTIFY=y in /boot/config-5.14.0-570.140.1.el9_6.x86_64
+a1081:213927:213927 [2] NCCL INFO CONFIG_PCI_P2PDMA=y in /boot/config-5.14.0-570.140.1.el9_6.x86_64
+a1081:213927:213927 [2] NCCL INFO DMA_BUF Support Enabled
+a1081:213927:213927 [2] NCCL INFO Kernel version: 5.14.0-570.140.1.el9_6.x86_64
+a1081:213927:213927 [2] NCCL INFO Hipruntime version: 71626385, firmware version: 0
+
+[2026-11-17 10:43:42] a1081:213927:213927 [2] /__w/rockrel/rockrel/build/comm-libs/rccl/build/hipify/src/init.cc:262 NCCL WARN HSA_NO_SCRATCH_RECLAIM=1 must be set to avoid performance degradation with the current HIP configuration. (Runtime version:71626385, GPU Firmware version:0)
+a1081:213927:213927 [2] NCCL INFO Stack size limit (unlimited) is unsafe; will use 8192KB for newly launched threads
+a1081:213927:213927 [2] NCCL INFO NCCL_SOCKET_IFNAME set to hsn0,hsn1,hsn2,hsn3
+a1081:213927:213927 [2] NCCL INFO RCCL version : 2.30.7-HEAD:7da4302
+HIP version  : 7.16.26385-0000000
+ROCm version : 10.1.0.0-9999-7da43026
+Hostname     : a1081
+Librccl path : /lus/scratch/BCINES/dci/salaun/minerva.hackathon/Windowing_CLIP_Hackathon_Adastra/.venv/lib/python3.12/site-packages/_rocm_sdk_libraries/lib/librccl.so.1
+a1081:213927:213927 [2] NCCL INFO RCCL: Detected 0 IB devices, primary type: 0 (count: 0)
+a1081:213927:213927 [2] NCCL INFO ncclOsDlopen(librccl-net.so) failed: librccl-net.so: cannot open shared object file: No such file or directory
+a1081:213927:213927 [2] NCCL INFO NET/Plugin: Could not find: librccl-net.so
+a1081:213927:213927 [2] NCCL INFO NET/IB : No device found.
+a1081:213927:213927 [2] NCCL INFO NET/IB : Using [RO]; OOB hsn0:10.80.8.138<0>
+a1081:213927:213927 [2] NCCL INFO Failed to initialize NET plugin IB
+a1081:213927:213927 [2] NCCL INFO NET/Socket : Using [0]hsn0:10.80.8.138<0> [1]hsn1:10.80.8.139<0> [2]hsn2:10.80.8.137<0> [3]hsn3:10.80.8.144<0>
+a1081:213927:213927 [2] NCCL INFO Initialized NET plugin Socket
+a1081:213927:213927 [2] NCCL INFO Assigned NET plugin Socket to comm
+a1081:213927:213927 [2] NCCL INFO ncclOsDlopen(libnccl-rma.so) failed: libnccl-rma.so: cannot open shared object file: No such file or directory
+a1081:213927:213927 [2] NCCL INFO RMA/Plugin: Could not find: libnccl-rma.so
+a1081:213927:213927 [2] NCCL INFO RMA/Plugin: Failed to load external plugin libnccl-rma.so, dlHandle: (nil), ncclRma: (nil)
+a1081:213927:213927 [2] NCCL INFO RMA/Plugin: Failed to initialize any plugin
+a1081:213927:213927 [2] NCCL INFO ncclOsDlopen(libnccl-gin.so) failed: libnccl-gin.so: cannot open shared object file: No such file or directory
+a1081:213927:213927 [2] NCCL INFO GIN/Plugin: Could not find: libnccl-gin.so
+a1081:213927:213927 [2] NCCL INFO GIN/Plugin: Failed to load external plugin libnccl-gin.so, dlHandle: (nil), ncclGin: (nil)
+a1081:213927:213927 [2] NCCL INFO GIN/Plugin: Failed to initialize any GIN plugin
+a1081:213927:213927 [2] NCCL INFO Using network Socket
+a1081:213927:213927 [2] NCCL INFO [node_id = 7; gpu_id = 18385; unique_id = 2673505581871099849; location_id = 12884902400; bdf = 12884902400; domain = 3; partition = 0], 
+a1081:213927:213927 [2] NCCL INFO [node_id = 4; gpu_id = 47157; unique_id = 10394936148240066528; location_id = 512; bdf = 512; domain = 0; partition = 0], 
+a1081:213927:213927 [2] NCCL INFO [node_id = 5; gpu_id = 11624; unique_id = 10826350992609964697; location_id = 4294967808; bdf = 4294967808; domain = 1; partition = 0], 
+a1081:213927:213927 [2] NCCL INFO [node_id = 6; gpu_id = 53900; unique_id = 16401299973566123636; location_id = 8589935104; bdf = 8589935104; domain = 2; partition = 0], 
+a1081:213927:213927 [2] NCCL INFO initialized internal alternative rsmi functionality; UALoE/UALLink fabric discovery uses sysfs (set RCCL_USE_AMD_SMI_LIB=1 to use amd_smi_lib instead)
+a1081:213927:213927 [2] NCCL INFO [Rank 6] ncclCommInitRankConfig_impl comm 0xd7c7250 rank 6 nranks 8 cudaDev 2 nvmlDev 2 busId 202000 commId 0xe656b451328189f1 - Init START
+a1081:213927:213927 [2] NCCL INFO RAS client listening socket at ::1<28028>
+a1081:213927:213927 [2] NCCL INFO NET/Socket : GPU Direct RDMA Disabled for HCA 0 'hsn0'
+a1081:213927:213927 [2] NCCL INFO NET/Socket : GPU Direct RDMA Disabled for HCA 1 'hsn1'
+a1081:213927:213927 [2] NCCL INFO NET/Socket : GPU Direct RDMA Disabled for HCA 2 'hsn2'
+a1081:213927:213927 [2] NCCL INFO NET/Socket : GPU Direct RDMA Disabled for HCA 3 'hsn3'
+a1081:213927:213927 [2] NCCL INFO Tuning index set to: 5
+a1081:213927:213927 [2] NCCL INFO RCCL PXN set as disabled (nRanks=8 threshold=64)
+a1081:213927:213927 [2] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 2 is 48-59,144-155. (GPU affinity = 48-71,144-167 ; CPU affinity = 0-11,24-35,48-59,72-83,96-107,120-131,144-155,168-179).
+a1081:213927:213927 [2] NCCL INFO ringGraph->nChannels = 4 
+a1081:213927:213927 [2] NCCL INFO Cheap post-send fence is ON
+a1081:213927:213927 [2] NCCL INFO Rank 6: 4 Net devices
+a1081:213927:213927 [2] NCCL INFO Rank 6: 0 CollNet devices
+a1081:213927:213927 [2] NCCL INFO comm 0xd7c7250 rank 6 nRanks 8 nNodes 2 localRanks 4 localRank 2 MNNVL 0
+a1081:213927:213927 [2] NCCL INFO Trees [0] 7/-1/-1->6->5 [1] 7/-1/-1->6->5 [2] 4/-1/-1->6->2 [3] 5/-1/-1->6->4 [4] 7/-1/-1->6->5 [5] 7/-1/-1->6->5 [6] 4/2/-1->6->-1 [7] 5/-1/-1->6->4 [8] 7/-1/-1->6->5 [9] 7/-1/-1->6->5 [10] 4/-1/-1->6->2 [11] 5/-1/-1->6->4 [12] 7/-1/-1->6->5 [13] 7/-1/-1->6->5 [14] 4/2/-1->6->-1 [15] 5/-1/-1->6->4 [16] 7/-1/-1->6->5 [17] 7/-1/-1->6->5 [18] 4/-1/-1->6->2 [19] 5/-1/-1->6->4 [20] 7/-1/-1->6->5 [21] 7/-1/-1->6->5 [22] 4/2/-1->6->-1 [23] 5/-1/-1->6->4 comm 0xd7c7250 nRanks 08 busId 202000
+a1081:213927:213927 [2] NCCL INFO RCCL P2P net chunk size default set to: 131072 (nRanks=8)
+a1081:213927:213927 [2] NCCL INFO P2P Chunksize set to 131072
+a1081:213927:213927 [2] NCCL INFO ncclOsDlopen(libnccl-profiler.so) failed: libnccl-profiler.so: cannot open shared object file: No such file or directory
+a1081:213927:213927 [2] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a1081:213927:213927 [2] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 0 isAllCudaP2p 1
+a1081:213927:214008 [0] NCCL INFO [Proxy Service UDS] Device 2 CPU core 154
+a1081:213927:214002 [0] NCCL INFO [Proxy Service] Device 2 CPU core 155
+a1081:213927:214002 [2] NCCL INFO proxy listening socket at 10.80.8.138<42595>
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040038f0 (connId 0)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904003978 (connId 1)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904003a00 (connId 2)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904003a88 (connId 3)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904003b10 (connId 4)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904003b98 (connId 5)
+a1081:213927:213927 [2] NCCL INFO Channel 01/0 : 6[202000] -> 7[302000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904003c20 (connId 6)
+a1081:213927:213927 [2] NCCL INFO Channel 05/0 : 6[202000] -> 7[302000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904003ca8 (connId 7)
+a1081:213927:213927 [2] NCCL INFO Channel 09/0 : 6[202000] -> 7[302000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904003d30 (connId 8)
+a1081:213927:213927 [2] NCCL INFO Channel 13/0 : 6[202000] -> 7[302000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904003db8 (connId 9)
+a1081:213927:213927 [2] NCCL INFO Channel 17/0 : 6[202000] -> 7[302000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904003e40 (connId 10)
+a1081:213927:213927 [2] NCCL INFO Channel 21/0 : 6[202000] -> 7[302000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904003ec8 (connId 11)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904003f50 (connId 12)
+a1081:213927:214016 [0] NCCL INFO [Proxy Progress] Device 2 CPU core 155
+a1081:213927:213927 [2] NCCL INFO Channel 03/0 : 2[2] -> 6[2] [receive] via NET/Socket/2 comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904003fd8 (connId 13)
+a1081:213927:213927 [2] NCCL INFO Channel 07/0 : 2[2] -> 6[2] [receive] via NET/Socket/2 comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004060 (connId 14)
+a1081:213927:213927 [2] NCCL INFO Channel 11/0 : 2[2] -> 6[2] [receive] via NET/Socket/2 comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040040e8 (connId 15)
+a1081:213927:213927 [2] NCCL INFO Channel 15/0 : 2[2] -> 6[2] [receive] via NET/Socket/2 comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004170 (connId 16)
+a1081:213927:213927 [2] NCCL INFO Channel 19/0 : 2[2] -> 6[2] [receive] via NET/Socket/2 comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040041f8 (connId 17)
+a1081:213927:213927 [2] NCCL INFO Channel 23/0 : 2[2] -> 6[2] [receive] via NET/Socket/2 comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004280 (connId 18)
+a1081:213927:213927 [2] NCCL INFO Channel 02/0 : 6[2] -> 2[2] [send] via NET/Socket/2 comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004308 (connId 19)
+a1081:213927:213927 [2] NCCL INFO Channel 06/0 : 6[2] -> 2[2] [send] via NET/Socket/2 comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004390 (connId 20)
+a1081:213927:213927 [2] NCCL INFO Channel 10/0 : 6[2] -> 2[2] [send] via NET/Socket/2 comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004418 (connId 21)
+a1081:213927:213927 [2] NCCL INFO Channel 14/0 : 6[2] -> 2[2] [send] via NET/Socket/2 comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040044a0 (connId 22)
+a1081:213927:213927 [2] NCCL INFO Channel 18/0 : 6[2] -> 2[2] [send] via NET/Socket/2 comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004528 (connId 23)
+a1081:213927:213927 [2] NCCL INFO Channel 22/0 : 6[2] -> 2[2] [send] via NET/Socket/2 comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Channel 03/0 : 6[202000] -> 4[2000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040045b0 (connId 24)
+a1081:213927:213927 [2] NCCL INFO Channel 07/0 : 6[202000] -> 4[2000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004638 (connId 25)
+a1081:213927:213927 [2] NCCL INFO Channel 11/0 : 6[202000] -> 4[2000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040046c0 (connId 26)
+a1081:213927:213927 [2] NCCL INFO Channel 15/0 : 6[202000] -> 4[2000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004748 (connId 27)
+a1081:213927:213927 [2] NCCL INFO Channel 19/0 : 6[202000] -> 4[2000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040047d0 (connId 28)
+a1081:213927:213927 [2] NCCL INFO Channel 23/0 : 6[202000] -> 4[2000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004858 (connId 29)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040048e0 (connId 30)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004968 (connId 31)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040049f0 (connId 32)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004a78 (connId 33)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004b00 (connId 34)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004b88 (connId 35)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004c10 (connId 36)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004c98 (connId 37)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004d20 (connId 38)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004da8 (connId 39)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004e30 (connId 40)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004eb8 (connId 41)
+a1081:213927:213927 [2] NCCL INFO Channel 00/0 : 6[202000] -> 5[102000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004f40 (connId 42)
+a1081:213927:213927 [2] NCCL INFO Channel 04/0 : 6[202000] -> 5[102000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904004fc8 (connId 43)
+a1081:213927:213927 [2] NCCL INFO Channel 08/0 : 6[202000] -> 5[102000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005050 (connId 44)
+a1081:213927:213927 [2] NCCL INFO Channel 12/0 : 6[202000] -> 5[102000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040050d8 (connId 45)
+a1081:213927:213927 [2] NCCL INFO Channel 16/0 : 6[202000] -> 5[102000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005160 (connId 46)
+a1081:213927:213927 [2] NCCL INFO Channel 20/0 : 6[202000] -> 5[102000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040051e8 (connId 47)
+a1081:213927:213927 [2] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005270 (connId 48)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040052f8 (connId 49)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005380 (connId 50)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005408 (connId 51)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005490 (connId 52)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005518 (connId 53)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040055a0 (connId 54)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005628 (connId 55)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040056b0 (connId 56)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005738 (connId 57)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040057c0 (connId 58)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005848 (connId 59)
+a1081:213927:213927 [2] NCCL INFO Channel 00/0 : 6[202000] -> 7[302000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040058d0 (connId 60)
+a1081:213927:213927 [2] NCCL INFO Channel 04/0 : 6[202000] -> 7[302000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005958 (connId 61)
+a1081:213927:213927 [2] NCCL INFO Channel 08/0 : 6[202000] -> 7[302000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040059e0 (connId 62)
+a1081:213927:213927 [2] NCCL INFO Channel 12/0 : 6[202000] -> 7[302000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005a68 (connId 63)
+a1081:213927:213927 [2] NCCL INFO Channel 16/0 : 6[202000] -> 7[302000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005af0 (connId 64)
+a1081:213927:213927 [2] NCCL INFO Channel 20/0 : 6[202000] -> 7[302000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005b78 (connId 65)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005c00 (connId 66)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005c88 (connId 67)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005d10 (connId 68)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005d98 (connId 69)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005e20 (connId 70)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005ea8 (connId 71)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005f30 (connId 72)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904005fb8 (connId 73)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006040 (connId 74)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040060c8 (connId 75)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006150 (connId 76)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040061d8 (connId 77)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006260 (connId 78)
+a1081:213927:213927 [2] NCCL INFO Channel 02/0 : 2[2] -> 6[2] [receive] via NET/Socket/2 comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040062e8 (connId 79)
+a1081:213927:213927 [2] NCCL INFO Channel 06/0 : 2[2] -> 6[2] [receive] via NET/Socket/2 comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006370 (connId 80)
+a1081:213927:213927 [2] NCCL INFO Channel 10/0 : 2[2] -> 6[2] [receive] via NET/Socket/2 comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040063f8 (connId 81)
+a1081:213927:213927 [2] NCCL INFO Channel 14/0 : 2[2] -> 6[2] [receive] via NET/Socket/2 comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006480 (connId 82)
+a1081:213927:213927 [2] NCCL INFO Channel 18/0 : 2[2] -> 6[2] [receive] via NET/Socket/2 comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006508 (connId 83)
+a1081:213927:213927 [2] NCCL INFO Channel 22/0 : 2[2] -> 6[2] [receive] via NET/Socket/2 comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Channel 02/0 : 6[202000] -> 4[2000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006590 (connId 84)
+a1081:213927:213927 [2] NCCL INFO Channel 06/0 : 6[202000] -> 4[2000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006618 (connId 85)
+a1081:213927:213927 [2] NCCL INFO Channel 10/0 : 6[202000] -> 4[2000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040066a0 (connId 86)
+a1081:213927:213927 [2] NCCL INFO Channel 14/0 : 6[202000] -> 4[2000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006728 (connId 87)
+a1081:213927:213927 [2] NCCL INFO Channel 18/0 : 6[202000] -> 4[2000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040067b0 (connId 88)
+a1081:213927:213927 [2] NCCL INFO Channel 22/0 : 6[202000] -> 4[2000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006838 (connId 89)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040068c0 (connId 90)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006948 (connId 91)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040069d0 (connId 92)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006a58 (connId 93)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006ae0 (connId 94)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006b68 (connId 95)
+a1081:213927:213927 [2] NCCL INFO Channel 01/0 : 6[202000] -> 5[102000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006bf0 (connId 96)
+a1081:213927:213927 [2] NCCL INFO Channel 03/0 : 6[202000] -> 5[102000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006c78 (connId 97)
+a1081:213927:213927 [2] NCCL INFO Channel 05/0 : 6[202000] -> 5[102000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006d00 (connId 98)
+a1081:213927:213927 [2] NCCL INFO Channel 07/0 : 6[202000] -> 5[102000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006d88 (connId 99)
+a1081:213927:213927 [2] NCCL INFO Channel 09/0 : 6[202000] -> 5[102000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006e10 (connId 100)
+a1081:213927:213927 [2] NCCL INFO Channel 11/0 : 6[202000] -> 5[102000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006e98 (connId 101)
+a1081:213927:213927 [2] NCCL INFO Channel 13/0 : 6[202000] -> 5[102000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006f20 (connId 102)
+a1081:213927:213927 [2] NCCL INFO Channel 15/0 : 6[202000] -> 5[102000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904006fa8 (connId 103)
+a1081:213927:213927 [2] NCCL INFO Channel 17/0 : 6[202000] -> 5[102000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904007030 (connId 104)
+a1081:213927:213927 [2] NCCL INFO Channel 19/0 : 6[202000] -> 5[102000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040070b8 (connId 105)
+a1081:213927:213927 [2] NCCL INFO Channel 21/0 : 6[202000] -> 5[102000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904007140 (connId 106)
+a1081:213927:213927 [2] NCCL INFO Channel 23/0 : 6[202000] -> 5[102000] via P2P/IPC comm 0xd7c7250 nRanks 08
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x1459040071c8 (connId 107)
+a1081:213927:213927 [2] NCCL INFO Connected all trees
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 6 -> connection 0x145904007250 (connId 108)
+a1081:213927:213927 [2] NCCL INFO ncclOsDlopen(libnccl-tuner.so) failed: libnccl-tuner.so: cannot open shared object file: No such file or directory
+a1081:213927:213927 [2] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a1081:213927:213927 [2] NCCL INFO RCCL Tuning index:5
+a1081:213927:213927 [2] NCCL INFO threadThresholds 8/8/64 | 64/8/64 | 256 | 256
+a1081:213927:213927 [2] NCCL INFO comm:0xd7c7250, nRanks:8, nNodes:2, coll channels:24 collnet channels:24, nvls channels:0, p2p channels:32, p2p channels per peer:2, shiftSize:-1
+a1081:213927:213927 [2] NCCL INFO Symmetric memory is not supported. cuMemEnable 0, globalGinSupport 0, globalNicFused 0 cuMemGdrSupport 1
+a1081:213927:213927 [2] NCCL INFO RCCL Unroll Factor (pre-set): 2
+a1081:213927:213927 [2] NCCL INFO ncclCommInitRankConfig_impl comm 0xd7c7250 rank 6 nranks 8 cudaDev 2 nvmlDev 2 busId 202000 commId 0xe656b451328189f1 - Init COMPLETE
+a1081:213927:213927 [2] NCCL INFO Init timings - ncclCommInitRankConfig_impl: rank 6 nranks 8 total 1.76 (kernels 0.71, alloc 0.23, bootstrap 0.01, allgathers 0.04, topo 0.34, graphs 0.01, connections 0.40, rest 0.02)
+a1081:213927:213927 [2] NCCL INFO CE AllReduce not enabled. Set RCCL_CE_ALLREDUCE=1 to enable.
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Kernel version: 5.14.0-570.140.1.el9_6.x86_64
+a1081:213927:213927 [2] NCCL INFO Initialized NET plugin Socket
+a1081:213927:213927 [2] NCCL INFO Assigned NET plugin Socket to comm
+a1081:213927:213927 [2] NCCL INFO RMA/Plugin: Failed to initialize any plugin
+a1081:213927:213927 [2] NCCL INFO GIN/Plugin: Failed to initialize any GIN plugin
+a1081:213927:213927 [2] NCCL INFO Using network Socket
+a1081:213927:213927 [2] NCCL INFO [Rank 2] ncclCommInitRankConfig_impl comm 0x10d0e1f0 rank 2 nranks 4 cudaDev 2 nvmlDev 2 busId 202000 commId 0x6be88752ccfdc5e4 - Init START
+a1081:213927:213927 [2] NCCL INFO NET/Socket : GPU Direct RDMA Disabled for HCA 0 'hsn0'
+a1081:213927:213927 [2] NCCL INFO NET/Socket : GPU Direct RDMA Disabled for HCA 1 'hsn1'
+a1081:213927:213927 [2] NCCL INFO NET/Socket : GPU Direct RDMA Disabled for HCA 2 'hsn2'
+a1081:213927:213927 [2] NCCL INFO NET/Socket : GPU Direct RDMA Disabled for HCA 3 'hsn3'
+a1081:213927:213927 [2] NCCL INFO Tuning index set to: 5
+a1081:213927:213927 [2] NCCL INFO RCCL PXN set as disabled (nRanks=4 threshold=64)
+a1081:213927:213927 [2] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 2 is 48-59,144-155. (GPU affinity = 48-71,144-167 ; CPU affinity = 48-59,144-155).
+a1081:213927:213927 [2] NCCL INFO ringGraph->nChannels = 12 
+a1081:213927:213927 [2] NCCL INFO Cheap post-send fence is ON
+a1081:213927:213927 [2] NCCL INFO Rank 2: 4 Net devices
+a1081:213927:213927 [2] NCCL INFO Rank 2: 0 CollNet devices
+a1081:213927:213927 [2] NCCL INFO comm 0x10d0e1f0 rank 2 nRanks 4 nNodes 1 localRanks 4 localRank 2 MNNVL 0
+a1081:213927:213927 [2] NCCL INFO Trees [0] 3/-1/-1->2->1 [1] 3/-1/-1->2->1 [2] 3/-1/-1->2->1 [3] 3/-1/-1->2->1 [4] 1/-1/-1->2->0 [5] 1/-1/-1->2->0 [6] 1/-1/-1->2->0 [7] 1/-1/-1->2->0 [8] -1/-1/-1->2->3 [9] -1/-1/-1->2->3 [10] -1/-1/-1->2->3 [11] -1/-1/-1->2->3 [12] 3/-1/-1->2->1 [13] 3/-1/-1->2->1 [14] 3/-1/-1->2->1 [15] 3/-1/-1->2->1 [16] 1/-1/-1->2->0 [17] 1/-1/-1->2->0 [18] 1/-1/-1->2->0 [19] 1/-1/-1->2->0 [20] -1/-1/-1->2->3 [21] -1/-1/-1->2->3 [22] -1/-1/-1->2->3 [23] -1/-1/-1->2->3 [24] 3/-1/-1->2->1 [25] 3/-1/-1->2->1 [26] 3/-1/-1->2->1 [27] 3/-1/-1->2->1 [28] 1/-1/-1->2->0 [29] 1/-1/-1->2->0 [30] 1/-1/-1->2->0 [31] 1/-1/-1->2->0 [32] -1/-1/-1->2->3 [33] -1/-1/-1->2->3 [34] -1/-1/-1->2->3 [35] -1/-1/-1->2->3 [36] 3/-1/-1->2->1 [37] 3/-1/-1->2->1 [38] 3/-1/-1->2->1 [39] 3/-1/-1->2->1 [40] 1/-1/-1->2->0 [41] 1/-1/-1->2->0 [42] 1/-1/-1->2->0 [43] 1/-1/-1->2->0 [44] -1/-1/-1->2->3 [45] -1/-1/-1->2->3 [46] -1/-1/-1->2->3 [47] -1/-1/-1->2->3 comm 0x10d0e1f0 nRanks 04 busId 202000
+a1081:213927:213927 [2] NCCL INFO P2P Chunksize set to 524288
+a1081:213927:213927 [2] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 0 isAllCudaP2p 1
+a1081:213927:214032 [0] NCCL INFO [Proxy Service] Device 2 CPU core 151
+a1081:213927:214035 [0] NCCL INFO [Proxy Service UDS] Device 2 CPU core 154
+a1081:213927:214032 [2] NCCL INFO proxy listening socket at 10.80.8.138<55151>
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940038f0 (connId 0)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894003978 (connId 1)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894003a00 (connId 2)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894003a88 (connId 3)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894003b10 (connId 4)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894003b98 (connId 5)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894003c20 (connId 6)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894003ca8 (connId 7)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894003d30 (connId 8)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894003db8 (connId 9)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894003e40 (connId 10)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894003ec8 (connId 11)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894003f50 (connId 12)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894003fd8 (connId 13)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004060 (connId 14)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940040e8 (connId 15)
+a1081:213927:213927 [2] NCCL INFO Channel 00/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004170 (connId 16)
+a1081:213927:213927 [2] NCCL INFO Channel 02/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940041f8 (connId 17)
+a1081:213927:213927 [2] NCCL INFO Channel 06/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004280 (connId 18)
+a1081:213927:213927 [2] NCCL INFO Channel 08/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004308 (connId 19)
+a1081:213927:213927 [2] NCCL INFO Channel 12/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004390 (connId 20)
+a1081:213927:213927 [2] NCCL INFO Channel 14/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004418 (connId 21)
+a1081:213927:213927 [2] NCCL INFO Channel 18/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940044a0 (connId 22)
+a1081:213927:213927 [2] NCCL INFO Channel 20/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004528 (connId 23)
+a1081:213927:213927 [2] NCCL INFO Channel 24/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940045b0 (connId 24)
+a1081:213927:213927 [2] NCCL INFO Channel 26/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004638 (connId 25)
+a1081:213927:213927 [2] NCCL INFO Channel 30/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940046c0 (connId 26)
+a1081:213927:213927 [2] NCCL INFO Channel 32/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004748 (connId 27)
+a1081:213927:213927 [2] NCCL INFO Channel 36/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940047d0 (connId 28)
+a1081:213927:213927 [2] NCCL INFO Channel 38/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004858 (connId 29)
+a1081:213927:213927 [2] NCCL INFO Channel 42/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940048e0 (connId 30)
+a1081:213927:213927 [2] NCCL INFO Channel 44/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004968 (connId 31)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940049f0 (connId 32)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004a78 (connId 33)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004b00 (connId 34)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004b88 (connId 35)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004c10 (connId 36)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004c98 (connId 37)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004d20 (connId 38)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004da8 (connId 39)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004e30 (connId 40)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004eb8 (connId 41)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004f40 (connId 42)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894004fc8 (connId 43)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005050 (connId 44)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940050d8 (connId 45)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005160 (connId 46)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940051e8 (connId 47)
+a1081:213927:213927 [2] NCCL INFO Channel 01/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005270 (connId 48)
+a1081:213927:213927 [2] NCCL INFO Channel 04/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940052f8 (connId 49)
+a1081:213927:213927 [2] NCCL INFO Channel 07/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005380 (connId 50)
+a1081:213927:213927 [2] NCCL INFO Channel 10/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005408 (connId 51)
+a1081:213927:213927 [2] NCCL INFO Channel 13/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005490 (connId 52)
+a1081:213927:213927 [2] NCCL INFO Channel 16/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005518 (connId 53)
+a1081:213927:213927 [2] NCCL INFO Channel 19/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940055a0 (connId 54)
+a1081:213927:213927 [2] NCCL INFO Channel 22/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005628 (connId 55)
+a1081:213927:213927 [2] NCCL INFO Channel 25/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940056b0 (connId 56)
+a1081:213927:213927 [2] NCCL INFO Channel 28/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005738 (connId 57)
+a1081:213927:213927 [2] NCCL INFO Channel 31/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940057c0 (connId 58)
+a1081:213927:213927 [2] NCCL INFO Channel 34/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005848 (connId 59)
+a1081:213927:213927 [2] NCCL INFO Channel 37/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940058d0 (connId 60)
+a1081:213927:213927 [2] NCCL INFO Channel 40/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005958 (connId 61)
+a1081:213927:213927 [2] NCCL INFO Channel 43/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940059e0 (connId 62)
+a1081:213927:213927 [2] NCCL INFO Channel 46/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005a68 (connId 63)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005af0 (connId 64)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005b78 (connId 65)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005c00 (connId 66)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005c88 (connId 67)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005d10 (connId 68)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005d98 (connId 69)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005e20 (connId 70)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005ea8 (connId 71)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005f30 (connId 72)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894005fb8 (connId 73)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006040 (connId 74)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940060c8 (connId 75)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006150 (connId 76)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940061d8 (connId 77)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006260 (connId 78)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940062e8 (connId 79)
+a1081:213927:213927 [2] NCCL INFO Channel 03/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006370 (connId 80)
+a1081:213927:213927 [2] NCCL INFO Channel 05/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940063f8 (connId 81)
+a1081:213927:213927 [2] NCCL INFO Channel 09/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006480 (connId 82)
+a1081:213927:213927 [2] NCCL INFO Channel 11/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006508 (connId 83)
+a1081:213927:213927 [2] NCCL INFO Channel 15/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006590 (connId 84)
+a1081:213927:213927 [2] NCCL INFO Channel 17/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006618 (connId 85)
+a1081:213927:213927 [2] NCCL INFO Channel 21/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940066a0 (connId 86)
+a1081:213927:213927 [2] NCCL INFO Channel 23/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006728 (connId 87)
+a1081:213927:213927 [2] NCCL INFO Channel 27/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940067b0 (connId 88)
+a1081:213927:213927 [2] NCCL INFO Channel 29/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006838 (connId 89)
+a1081:213927:213927 [2] NCCL INFO Channel 33/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940068c0 (connId 90)
+a1081:213927:213927 [2] NCCL INFO Channel 35/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006948 (connId 91)
+a1081:213927:213927 [2] NCCL INFO Channel 39/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940069d0 (connId 92)
+a1081:213927:213927 [2] NCCL INFO Channel 41/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006a58 (connId 93)
+a1081:213927:213927 [2] NCCL INFO Channel 45/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006ae0 (connId 94)
+a1081:213927:213927 [2] NCCL INFO Channel 47/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006b68 (connId 95)
+a1081:213927:213927 [2] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006bf0 (connId 96)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006c78 (connId 97)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006d00 (connId 98)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006d88 (connId 99)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006e10 (connId 100)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006e98 (connId 101)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006f20 (connId 102)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894006fa8 (connId 103)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894007030 (connId 104)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940070b8 (connId 105)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894007140 (connId 106)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940071c8 (connId 107)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894007250 (connId 108)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940072d8 (connId 109)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894007360 (connId 110)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940073e8 (connId 111)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894007470 (connId 112)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940074f8 (connId 113)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894007580 (connId 114)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894007608 (connId 115)
+a1081:213927:213927 [2] NCCL INFO Channel 01/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894007690 (connId 116)
+a1081:213927:213927 [2] NCCL INFO Channel 03/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894007718 (connId 117)
+a1081:213927:213927 [2] NCCL INFO Channel 09/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940077a0 (connId 118)
+a1081:213927:213927 [2] NCCL INFO Channel 10/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894007828 (connId 119)
+a1081:213927:213927 [2] NCCL INFO Channel 11/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940078b0 (connId 120)
+a1081:213927:213927 [2] NCCL INFO Channel 13/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894007938 (connId 121)
+a1081:213927:213927 [2] NCCL INFO Channel 15/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940079c0 (connId 122)
+a1081:213927:213927 [2] NCCL INFO Channel 21/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894007a48 (connId 123)
+a1081:213927:213927 [2] NCCL INFO Channel 22/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894007ad0 (connId 124)
+a1081:213927:213927 [2] NCCL INFO Channel 23/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894007b58 (connId 125)
+a1081:213927:213927 [2] NCCL INFO Channel 25/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894007be0 (connId 126)
+a1081:213927:213927 [2] NCCL INFO Channel 27/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894007c68 (connId 127)
+a1081:213927:213927 [2] NCCL INFO Channel 33/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894040a80 (connId 128)
+a1081:213927:213927 [2] NCCL INFO Channel 34/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894040b08 (connId 129)
+a1081:213927:213927 [2] NCCL INFO Channel 35/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894040b90 (connId 130)
+a1081:213927:213927 [2] NCCL INFO Channel 37/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894040c18 (connId 131)
+a1081:213927:213927 [2] NCCL INFO Channel 39/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894040ca0 (connId 132)
+a1081:213927:213927 [2] NCCL INFO Channel 45/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894040d28 (connId 133)
+a1081:213927:213927 [2] NCCL INFO Channel 46/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894040db0 (connId 134)
+a1081:213927:213927 [2] NCCL INFO Channel 47/0 : 2[202000] -> 3[302000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894040e38 (connId 135)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894040ec0 (connId 136)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894040f48 (connId 137)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894040fd0 (connId 138)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041058 (connId 139)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940410e0 (connId 140)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041168 (connId 141)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940411f0 (connId 142)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041278 (connId 143)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041300 (connId 144)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041388 (connId 145)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041410 (connId 146)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041498 (connId 147)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041520 (connId 148)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940415a8 (connId 149)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041630 (connId 150)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940416b8 (connId 151)
+a1081:213927:213927 [2] NCCL INFO Channel 05/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041740 (connId 152)
+a1081:213927:213927 [2] NCCL INFO Channel 06/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940417c8 (connId 153)
+a1081:213927:213927 [2] NCCL INFO Channel 17/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041850 (connId 154)
+a1081:213927:213927 [2] NCCL INFO Channel 18/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940418d8 (connId 155)
+a1081:213927:213927 [2] NCCL INFO Channel 29/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041960 (connId 156)
+a1081:213927:213927 [2] NCCL INFO Channel 30/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940419e8 (connId 157)
+a1081:213927:213927 [2] NCCL INFO Channel 41/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041a70 (connId 158)
+a1081:213927:213927 [2] NCCL INFO Channel 42/0 : 2[202000] -> 0[2000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041af8 (connId 159)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041b80 (connId 160)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041c08 (connId 161)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041c90 (connId 162)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041d18 (connId 163)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041da0 (connId 164)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041e28 (connId 165)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041eb0 (connId 166)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041f38 (connId 167)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894041fc0 (connId 168)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042048 (connId 169)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940420d0 (connId 170)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042158 (connId 171)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940421e0 (connId 172)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042268 (connId 173)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940422f0 (connId 174)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042378 (connId 175)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042400 (connId 176)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042488 (connId 177)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042510 (connId 178)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042598 (connId 179)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042620 (connId 180)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940426a8 (connId 181)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042730 (connId 182)
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940427b8 (connId 183)
+a1081:213927:213927 [2] NCCL INFO Channel 00/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042840 (connId 184)
+a1081:213927:213927 [2] NCCL INFO Channel 01/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940428c8 (connId 185)
+a1081:213927:213927 [2] NCCL INFO Channel 02/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042950 (connId 186)
+a1081:213927:213927 [2] NCCL INFO Channel 04/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940429d8 (connId 187)
+a1081:213927:213927 [2] NCCL INFO Channel 06/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042a60 (connId 188)
+a1081:213927:213927 [2] NCCL INFO Channel 07/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042ae8 (connId 189)
+a1081:213927:213927 [2] NCCL INFO Channel 12/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042b70 (connId 190)
+a1081:213927:213927 [2] NCCL INFO Channel 13/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042bf8 (connId 191)
+a1081:213927:213927 [2] NCCL INFO Channel 14/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042c80 (connId 192)
+a1081:213927:213927 [2] NCCL INFO Channel 16/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042d08 (connId 193)
+a1081:213927:213927 [2] NCCL INFO Channel 18/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042d90 (connId 194)
+a1081:213927:213927 [2] NCCL INFO Channel 19/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042e18 (connId 195)
+a1081:213927:213927 [2] NCCL INFO Channel 24/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042ea0 (connId 196)
+a1081:213927:213927 [2] NCCL INFO Channel 25/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042f28 (connId 197)
+a1081:213927:213927 [2] NCCL INFO Channel 26/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894042fb0 (connId 198)
+a1081:213927:213927 [2] NCCL INFO Channel 28/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894043038 (connId 199)
+a1081:213927:213927 [2] NCCL INFO Channel 30/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940430c0 (connId 200)
+a1081:213927:213927 [2] NCCL INFO Channel 31/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894043148 (connId 201)
+a1081:213927:213927 [2] NCCL INFO Channel 36/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940431d0 (connId 202)
+a1081:213927:213927 [2] NCCL INFO Channel 37/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894043258 (connId 203)
+a1081:213927:213927 [2] NCCL INFO Channel 38/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940432e0 (connId 204)
+a1081:213927:213927 [2] NCCL INFO Channel 40/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894043368 (connId 205)
+a1081:213927:213927 [2] NCCL INFO Channel 42/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x1458940433f0 (connId 206)
+a1081:213927:213927 [2] NCCL INFO Channel 43/0 : 2[202000] -> 1[102000] via P2P/IPC comm 0x10d0e1f0 nRanks 04
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894043478 (connId 207)
+a1081:213927:213927 [2] NCCL INFO Connected all trees
+a1081:213927:213927 [2] NCCL INFO Connected to proxy localRank 2 -> connection 0x145894043500 (connId 208)
+a1081:213927:214042 [0] NCCL INFO [Proxy Progress] Device 2 CPU core 54
+a1081:213927:213927 [2] NCCL INFO RCCL Tuning index:5
+a1081:213927:213927 [2] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 256 | 256
+a1081:213927:213927 [2] NCCL INFO comm:0x10d0e1f0, nRanks:4, nNodes:1, coll channels:48 collnet channels:48, nvls channels:0, p2p channels:64, p2p channels per peer:16, shiftSize:-1
+a1081:213927:213927 [2] NCCL INFO Symmetric memory is not supported. cuMemEnable 0, globalGinSupport 0, globalNicFused 0 cuMemGdrSupport 1
+a1081:213927:213927 [2] NCCL INFO RCCL Unroll Factor (pre-set): 2
+a1081:213927:213927 [2] NCCL INFO ncclCommInitRankConfig_impl comm 0x10d0e1f0 rank 2 nranks 4 cudaDev 2 nvmlDev 2 busId 202000 commId 0x6be88752ccfdc5e4 - Init COMPLETE
+a1081:213927:213927 [2] NCCL INFO Init timings - ncclCommInitRankConfig_impl: rank 2 nranks 4 total 0.65 (kernels 0.00, alloc 0.01, bootstrap 0.00, allgathers 0.01, topo 0.35, graphs 0.00, connections 0.28, rest 0.00)
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Taking kernel-based collective path
+a1081:213927:213927 [2] NCCL INFO Memory used = 1827342352
+a1081:213927:213927 [2] NCCL INFO Memory used = 426082704
