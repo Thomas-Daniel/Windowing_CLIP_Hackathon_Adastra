@@ -3,19 +3,82 @@
 This branch adds to `main` only what these runs need. All runs use the Atlas backbone, a global batch of 128 and
 4 MI300A nodes each.
 
-## This branch: native MIOpen 3D convolutions (`wave1-atlas-192-miopen`)
+## This branch: new environment, three conv implementations (`wave1-atlas-192-newenv`)
 
-`wave1-atlas-192` computes every Conv3d of Atlas as im2col + GEMM (`model.conv_impl: gemm`, `mcw/gemm_conv3d.py`),
-because MIOpen's 3D convs were unusable with the software stack the runs used (torch 2.5.1+rocm6.2). This branch is
-the same code with **`model.conv_impl: native`** (`configs/base.yaml`): the convs go through `F.conv3d`, i.e. MIOpen.
-It is meant for a newer PyTorch / ROCm. The GEMM path is still there: set `model.conv_impl: gemm` to compare.
+The code of the 2026-11-16 runs: `wave1-atlas-192-miopen`, plus the Triton convolution and the settings that run
+torch 2.14.0+rocm10.1.0 on 4 MI300A nodes.
 
-Differences from `wave1-atlas-192`:
-- `configs/base.yaml`: `conv_impl: native`.
-- `scripts/adastra_bind.sh`: MIOpen user db and kernel cache on the node-local `/tmp`, one per rank
-  (`/tmp/miopen_<job>_<local rank>`). `scripts/env_adastra.sh` no longer points them to `$SCRATCHDIR/.miopen`.
-- `scripts/launch_wave.sh`: `VENV_DIR` is required. The default venv of `wave1-atlas-192` (torch 2.5.1) cannot run
-  these convs.
+- **Venv**: `scripts/setup_env_rocm10_adastra.sh` (uv, Python 3.12, torch 2.14.0+rocm10.1.0, Triton 3.8, ROCm
+  libraries inside the wheels). `scripts/launch_wave.sh` requires it as `VENV_DIR`.
+- **`model.conv_impl`** (`configs/base.yaml`, default `native`) sets how every Conv3d is computed, Atlas's
+  (`mcw/backbone.py`) and the windowing arm's (`mcw/model.py`):
+  - `native`: MIOpen `F.conv3d`;
+  - `gemm`: im2col + GEMM (`mcw/gemm_conv3d.py`, the code of `wave1-atlas-192`);
+  - `triton`: implicit GEMM in Triton (`mcw/triton_conv3d.py`, prototype), without the column buffer.
+
+  Per run: `--set model.conv_impl=triton`, or `CONV_IMPL=triton` with `scripts/launch_wave.sh`.
+- **MIOpen Find**: `MCW_CUDNN_BENCHMARK=1` sets `torch.backends.cudnn.benchmark` (`train.py`), which makes MIOpen
+  search for the fastest kernels. `launch_wave.sh` sets it. The first step takes ~4 min instead of ~1.
+- **`scripts/env_adastra.sh`**, for the ROCm 7+ wheels (detected by `site-packages/_rocm_sdk_core/lib`):
+  - RCCL plugin `aws-ofi-rccl/1.18.0_rocm_7`, with the wheel's libraries on `LD_LIBRARY_PATH`. The rocm6 plugin
+    needs `libamdhip64.so.6`. Without the right plugin, RCCL fell back to TCP sockets (45 s/step).
+  - Shim `$VENV_DIR/rocm_shim/libhsa-runtime64.so`, pointing to the wheel's `libhsa-runtime64.so.1`. Without it,
+    libfabric loaded the system's ROCm 6 HSA runtime and GPU memory registration failed (`Bad address`,
+    `cxil_map: write error`).
+  - `TORCH_BLAS_PREFER_HIPBLASLT=0`. hipBLASLt spends ~25 ms of host CPU per matmul in this stack: Atlas fwd+bwd
+    took 15.6 s instead of 0.54 s with rocBLAS.
+  - `HSA_NO_SCRATCH_RECLAIM=1` (requested by this RCCL), `NCCL_SOCKET_IFNAME=hsn0,hsn1,hsn2,hsn3`,
+    `NCCL_NET_GDR_LEVEL=3`.
+- **`scripts/launch_wave.sh`**: `CONV_IMPL`, MIOpen Find for the training jobs, and `EXCLUDE` (default `a1014`,
+  whose hsn0 was unreachable: "No route to host").
+- **Network**: checked in the RCCL logs of the runs (`NCCL_DEBUG=INFO`):
+  - all inter-node traffic went through Libfabric / CXI (Slingshot), 4 NICs per node, never TCP;
+  - ~90 % of the network connections use GPUDirect RDMA;
+  - the others, where a GPU uses another GPU's NIC, are staged through host memory.
+- **Tests**: `TRITON_INTERPRET=1 python -m tests.test_triton_conv3d` (CPU, a few minutes). It compares
+  `TritonConv3d` with `nn.Conv3d` (output, grad_x, grad_W) and checks the class of every Conv3d for each
+  `conv_impl`.
+
+### The three runs (2026-11-16)
+
+`mix192r_fixed_reg4` with seeds 0, 1 and 2, one conv implementation each. Each run used 4 MI300A nodes, 8 epochs
+(4 840 steps), commit `f9404c9`. Step times come from `s_per_step` in `metrics.jsonl`. Wall time and GENCI hours
+cover the training jobs.
+
+| `conv_impl` | run | mean s/step | median | p10 | p90 | volumes/s per APU | first step | wall | GENCI h |
+|---|---|---|---|---|---|---|---|---|---|
+| `gemm` | `mix192r_fixed_reg4` | 2.30 | 2.15 | 1.61 | 3.16 | 3.47 | 58 s | 3.31 h | 53.0 |
+| `triton` | `mix192r_fixed_reg4_seed1` | **1.98** | 1.88 | 0.97 | 3.13 | **4.03** | 64 s | **2.85 h** | **45.6** |
+| `native` + Find | `mix192r_fixed_reg4_seed2` | 2.07 | 2.02 | 1.19 | 3.07 | 3.86 | 264 s | 3.04 h | 48.6 |
+
+- **Speed against GEMM**:
+  - Triton: −14 % on the mean step, −40 % on the fastest steps (p10);
+  - MIOpen with Find: −10 % on the mean, −26 % on p10.
+- **Old environment** (GEMM, torch 2.5.1): the same config takes ~3.6 h and 57 GENCI h (reference timings below).
+- **p90 ≈ 3.1 s with all three implementations.** The slow steps come from the multi-node collectives, not from
+  the convolutions. A step loses `mean − p10` to them: 0.69 s with GEMM, 1.01 s with Triton, 0.88 s with MIOpen.
+
+**Do not use the evaluations of these three runs.**
+
+| `conv_impl` | probe mean | R@10 mean | zero-shot mean |
+|---|---|---|---|
+| `gemm` | 0.650 | 0.010 | 0.590 |
+| `triton` | 0.702 | 0.072 | 0.730 |
+| `native` + Find | 0.722 | 0.218 | 0.760 |
+| reference `mix192r_clip`, old env, 3 seeds | 0.715 | 0.194 | 0.752 |
+| reference `mix192r_pillar11`, old env, 3 seeds | 0.726 | 0.241 | 0.761 |
+
+- **Unstable validation.** In all three runs, the validation R@10 jumps from one epoch to the next, whatever the
+  conv implementation.
+  - `gemm`, i2t R@10 per epoch: 0.10, 0.13, 0.34, 0.08, 0.49, 0.01, 0.57, 0.01.
+  - In the old environment it rises steadily: `mix192r_clip`, 0.18 → 0.62.
+- **The final evaluation follows the last epoch's state.** The last validation R@10 is 0.65 for `native` and 0.01
+  for `gemm`.
+- **BatchNorm statistics.** The checkpoints have negative BatchNorm `running_var`, mostly in the stem's
+  `conv_down`. This happens in all three runs, and never in the old environment.
+- **Cause unknown.** The BatchNorm alone is exact in this stack (MIOpen and native, centred inputs; job 6015590).
+
+### MIOpen 3D convolutions (from `wave1-atlas-192-miopen`)
 
 Measured on 1 exclusive MI300A (bf16, 192→192 3³ conv on 1 × 192 × 128³, TFLOP/s; jobs 5997815 / 6003917):
 
@@ -25,8 +88,10 @@ Measured on 1 exclusive MI300A (bf16, 192→192 3³ conv on 1 × 192 × 128³, T
 | 2.14.1 / 7.2 | fails | unusable (hipBLASLt at 0.5 TFLOP/s on these shapes) |
 | 2.15.0 / 7.14 | 103-120 / 164-169, equal to `GemmConv3d` to 5e-5 | 138-147 / 111-126 |
 
-The first MIOpen call of each conv shape takes a few seconds to ~17 s (kernel search). The wave1 numbers in this file
-(timings, costs) were measured with the GEMM path.
+The first MIOpen call of each conv shape takes a few seconds to ~17 s (kernel search). The reference timings at the
+end of this file were measured with the GEMM path in the old environment.
+
+## The runs
 
 | group | configs (`configs/<name>.yaml`) | runs | epochs |
 |---|---|---|---|
@@ -65,27 +130,29 @@ They are already done, and their configs are included.
 Prerequisites:
 - read access to `/lus/scratch/CT3/cad17796/thdaniel/` (group `cad17796`);
 - a Slurm account with MI300 hours;
-- a venv: by default the one the runs used, `/lus/scratch/CT3/cad17796/thdaniel/venvs/merlin_clip_1113`
-  (torch 2.5.1+rocm6.2), or set `VENV_DIR`.
+- the venv of `scripts/setup_env_rocm10_adastra.sh`, passed as `VENV_DIR`.
+
+`CONV_IMPL=gemm|triton|native` overrides `model.conv_impl` (default `native`) for the runs of one call. Example:
+`CONV_IMPL=triton VENV_DIR=$WORKDIR/myenv ACCOUNT=<project> bash scripts/launch_wave.sh mix192r_abdo`.
 
 From the repository root:
 
 ```bash
-ACCOUNT=<project> bash scripts/launch_wave.sh \
+VENV_DIR=<venv> ACCOUNT=<project> bash scripts/launch_wave.sh \
   mix192r_fixed_reg2 mix192r_fixed_reg2_seed1 mix192r_fixed_reg2_seed2 \
   mix192r_fixed_reg4 mix192r_fixed_reg4_seed1 mix192r_fixed_reg4_seed2 \
   mix192r_hu_cdf mix192r_hu_cdf_seed1 mix192r_hu_cdf_seed2 \
   mix192r_abdo mix192r_abdo_seed1 mix192r_abdo_seed2
-ACCOUNT=<project> bash scripts/launch_wave.sh mix192r_lung_seed1 mix192r_lung_seed2
-LONG=1 ACCOUNT=<project> bash scripts/launch_wave.sh \
+VENV_DIR=<venv> ACCOUNT=<project> bash scripts/launch_wave.sh mix192r_lung_seed1 mix192r_lung_seed2
+LONG=1 VENV_DIR=<venv> ACCOUNT=<project> bash scripts/launch_wave.sh \
   mix192r_long24_clip_seed1 mix192r_long24_clip_seed2 mix192r_long24_pillar11_seed1 mix192r_long24_pillar11_seed2
-ACCOUNT=<project> bash scripts/launch_wave.sh \
+VENV_DIR=<venv> ACCOUNT=<project> bash scripts/launch_wave.sh \
   mix192c_clip_seed1 mix192c_clip_seed2 mix192c_pillar11_seed1 mix192c_pillar11_seed2
 
 squeue -u $USER -o "%.9i %.34j %.8T %.10M %.20S" | grep -v -E "resume|eval_"
 ```
 
-## Reference timings (2026-11-16, this branch, `model.conv_impl: gemm`, torch 2.5.1+rocm6.2)
+## Reference timings (2026-11-16, `wave1-atlas-192`: `model.conv_impl: gemm`, torch 2.5.1+rocm6.2)
 
 Measured with 1000-step runs (one end of epoch at step 605, i.e. one validation and one checkpoint) on exclusive
 MI300A nodes. Use the **mean** of `s_per_step` (logged every 10 steps in `metrics.jsonl`): it sets the wall time,

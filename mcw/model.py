@@ -66,9 +66,14 @@ class CTClip(nn.Module):
         self.arm, self.in_chans, self.post_norm = w["arm"], arm["in_chans"], arm["post_norm"]
         self.adapter = arm["adapter"]
         self.norm = PostNorm() if arm["post_norm"] else nn.Identity()
-        conv_impl = m.get("conv_impl", "gemm")
+        conv_impl = m.get("conv_impl", "gemm")  # gemm | triton | native, the same for the arm's and Atlas's convs
         if conv_impl == "gemm":
             swap_conv3d(self.adapter)          # LocalWindow's 1x1x1 gate convs
+        elif conv_impl == "triton":
+            from .triton_conv3d import swap_conv3d_triton  # imports triton: only when asked for
+            swap_conv3d_triton(self.adapter)
+        elif conv_impl != "native":
+            raise ValueError(f"model.conv_impl must be gemm | triton | native, got {conv_impl!r}")
         if backbone == "vit":
             if arm["first_conv"] is not None:
                 raise ValueError("the dense arm replaces Atlas's first conv: not available with model.backbone=vit")

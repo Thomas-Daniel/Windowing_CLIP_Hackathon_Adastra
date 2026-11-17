@@ -67,8 +67,23 @@ def check_wgrad_deterministic() -> None:
     print("  wgrad deterministic, split-invariant: OK", flush=True)
 
 
+def check_model_swap() -> None:
+    """model.conv_impl sets the class of every Conv3d of the model, Atlas's and the windowing arm's."""
+    from mcw.model import CTClip
+    from tests.test_cpu import small_cfg
+    for impl, cls in (("triton", T.TritonConv3d), ("gemm", G.GemmConv3d), ("native", torch.nn.Conv3d)):
+        cfg = small_cfg("local")                            # local: the arm has its own Conv3d (gate network)
+        cfg["model"]["conv_impl"] = impl
+        model = CTClip(cfg, text_dim=64)
+        convs = [m for m in model.modules() if isinstance(m, torch.nn.Conv3d)]
+        n_arm = sum(isinstance(m, torch.nn.Conv3d) for m in model.adapter.modules())
+        assert n_arm and all(type(m) is cls for m in convs), (impl, sorted({type(m).__name__ for m in convs}))
+        print(f"  conv_impl={impl}: {len(convs)} Conv3d ({n_arm} in the arm), all {cls.__name__}: OK", flush=True)
+
+
 if __name__ == "__main__":
     print(f"device: {DEV}", flush=True)
+    check_model_swap()
     check(torch.float32, atol=1e-4, rtol=1e-4)
     if DEV == "cuda":
         check(torch.bfloat16, atol=0.1, rtol=0.05)
